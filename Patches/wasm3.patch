@@ -1,0 +1,39 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0862181..9039759 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -224,3 +224,13 @@ message("Debug flags:   ${CMAKE_C_FLAGS_DEBUG}")
+ message("Release flags: ${CMAKE_C_FLAGS_RELEASE}")
+ 
+ message("----")
++
++install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/source/
++  DESTINATION include
++  FILES_MATCHING PATTERN "*.h"
++)
++install(TARGETS m3 EXPORT ${PROJECT_NAME}Targets)
++install(EXPORT ${PROJECT_NAME}Targets
++  FILE ${PROJECT_NAME}Config.cmake
++  DESTINATION lib/cmake/${PROJECT_NAME}
++)
+diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt
+index 070c7fa..9faea8a 100644
+--- a/source/CMakeLists.txt
++++ b/source/CMakeLists.txt
+@@ -19,7 +19,10 @@ set(sources
+ 
+ add_library(m3 STATIC ${sources})
+ 
+-target_include_directories(m3 PUBLIC .)
++target_include_directories(m3 PUBLIC 
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
++    $<INSTALL_INTERFACE:include>
++)
+ 
+ target_compile_features(m3 PRIVATE c_std_99)
+ 
+@@ -56,3 +59,4 @@ elseif(BUILD_WASI MATCHES "uvwasi")
+     target_compile_definitions(m3 PUBLIC d_m3HasUVWASI)
+     include_directories("${libuv_SOURCE_DIR}/include")
+ endif()
++

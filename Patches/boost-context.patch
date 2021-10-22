@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a0c2e92..d4e25b5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -103,13 +103,13 @@ message(STATUS "Boost.Context: "
+ 
+ if(BOOST_CONTEXT_IMPLEMENTATION STREQUAL "fcontext")
+   if(BOOST_CONTEXT_ASSEMBLER STREQUAL gas)
+-    if(CMAKE_CXX_PLATFORM_ID MATCHES "Cygwin")
++    if(CMAKE_CXX_PLATFORM_ID MATCHES "Cygwin" OR CMAKE_CXX_PLATFORM_ID MATCHES "MinGW")
+       enable_language(ASM-ATT)
+     else()
+       enable_language(ASM)
+     endif()
+   else()
+-    enable_language(ASM_MASM)
++    enable_language(ASM_MASM) 
+   endif()
+ endif()
+ 

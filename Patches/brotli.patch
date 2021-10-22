@@ -1,0 +1,59 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8cbc3dc..1170f3e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -130,7 +130,9 @@ else()
+ endif()
+ unset(LOG2_RES)
+ 
+-set(BROTLI_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/c/include")
++set(BROTLI_C_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/c/include")
++set(BROTLI_INCLUDE_DIRS $<BUILD_INTERFACE:${BROTLI_C_INCLUDE_DIR}> $<INSTALL_INTERFACE:include>)
++mark_as_advanced(BROTLI_C_INCLUDE_DIR)
+ mark_as_advanced(BROTLI_INCLUDE_DIRS)
+ 
+ set(BROTLI_LIBRARIES_CORE brotlienc brotlidec brotlicommon)
+@@ -221,26 +223,26 @@ target_link_libraries(brotli ${BROTLI_LIBRARIES_STATIC})
+ # Installation
+ if(NOT BROTLI_BUNDLED_MODE)
+   install(
+-    TARGETS brotli
++    TARGETS brotli EXPORT ${PROJECT_NAME}Targets
+     RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+   )
+ 
+   install(
+-    TARGETS ${BROTLI_LIBRARIES_CORE}
++    TARGETS ${BROTLI_LIBRARIES_CORE} EXPORT ${PROJECT_NAME}Targets
+     ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+     RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+   )
+ 
+   install(
+-    TARGETS ${BROTLI_LIBRARIES_CORE_STATIC}
++    TARGETS ${BROTLI_LIBRARIES_CORE_STATIC} EXPORT ${PROJECT_NAME}Targets
+     ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+     RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+   )
+ 
+   install(
+-    DIRECTORY ${BROTLI_INCLUDE_DIRS}/brotli
++    DIRECTORY ${BROTLI_C_INCLUDE_DIR}/brotli
+     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+   )
+ endif()  # BROTLI_BUNDLED_MODE
+@@ -410,9 +412,9 @@ if(NOT BROTLI_BUNDLED_MODE)
+     DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
+   install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libbrotlienc.pc"
+     DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
+-  install(EXPORT ${NAME}Targets
+-    FILE ${NAME}Config.cmake
+-    DESTINATION lib/cmake/${NAME}
++  install(EXPORT ${PROJECT_NAME}Targets
++    FILE ${PROJECT_NAME}Config.cmake
++    DESTINATION lib/cmake/${PROJECT_NAME}
+   )
+ endif()  # BROTLI_BUNDLED_MODE
+ 
