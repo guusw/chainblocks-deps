@@ -1,32 +1,23 @@
 cmake_minimum_required(VERSION 3.21)
 project(Deps)
 
-option(BUILD_ID "The identifier for the build" "x86_64-pc-windows-gnu")
+set(BUILD_ID "x86_64-pc-windows-gnu" CACHE STRING "The identifier for the build")
 set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/install/${BUILD_ID})
 
-set(CONFIGURE_TARGET x86_64-w64-windows-gnu)
-set(BUILD_TYPE Release)
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
 
+include(Platform)
 include(ExternalProject)
 
-function(add_project NAME)
-    math(EXPR REMAINING_ARGC "${ARGC}-1")
-    if(REMAINING_ARGC) 
-        list(SUBLIST ARGV 1 ${REMAINING_ARGC} REMAINING_ARGS)
-        message(STATUS "REMAINING_ARGS: " ${REMAINING_ARGS})
-    else()
-        set(REMAINING_ARGS "")
-    endif()
-    message(STATUS "add_project(${NAME} ${REMAINING_ARGS})")
-
-    ExternalProject_Add(${NAME} 
-        CMAKE_ARGS 
-            -DBUILD_SHARED_LIBS=OFF
-            -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} 
-            -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
-        ${REMAINING_ARGS}
-    )
-endfunction()
+set(COMMON_ARGS 
+    CMAKE_ARGS 
+        -DBUILD_SHARED_LIBS=OFF
+        -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} 
+        -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+        -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
+)
 
 function(add_header_lib NAME INCLUDE_PATH)
     add_library(${NAME} INTERFACE)
@@ -47,12 +38,13 @@ function(add_header_lib NAME INCLUDE_PATH)
     )
 endfunction()
 
-add_project(json SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/json)
-add_project(kcp SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/kcp)
-add_project(replxx SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/replxx)
-add_project(magic_enum SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/magic_enum)
-add_project(nameof SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/nameof)
-add_project(pareto SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pareto
+ExternalProject_Add(json SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/json ${COMMON_ARGS})
+ExternalProject_Add(kcp SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/kcp ${COMMON_ARGS})
+ExternalProject_Add(replxx SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/replxx ${COMMON_ARGS})
+ExternalProject_Add(magic_enum SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/magic_enum ${COMMON_ARGS})
+ExternalProject_Add(nameof SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/nameof ${COMMON_ARGS})
+ExternalProject_Add(pareto SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pareto
+    ${COMMON_ARGS}
     CMAKE_ARGS
         -DBUILD_PYTHON_BINDING=OFF
         -DBUILD_TESTS=OFF
@@ -61,57 +53,77 @@ add_project(pareto SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pareto
         -DBUILD_BENCHMARKS=OFF
 )
 
-add_project(SDL SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/SDL
+ExternalProject_Add(SDL SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/SDL
+    ${COMMON_ARGS}
     CMAKE_ARGS 
         -DSDL_RENDER_DISABLED=ON
 )
 
-add_project(bgfx SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/bgfx.cmake
+ExternalProject_Add(bgfx
+    GIT_REPOSITORY https://github.com/bkaradzic/bgfx.cmake.git
+    GIT_TAG v1.115.7908-b7b7cd7
+    GIT_NO_SUBMODULES
+    PATCH_COMMAND git apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/bgfx.cmake.patch
+    ${COMMON_ARGS}
     CMAKE_ARGS 
         -DBX_DIR=${CMAKE_CURRENT_SOURCE_DIR}/bx
         -DBIMG_DIR=${CMAKE_CURRENT_SOURCE_DIR}/bimg
         -DBGFX_DIR=${CMAKE_CURRENT_SOURCE_DIR}/bgfx
+        -DBIMG_DECODE_ENABLE=OFF
+        -DBGFX_BUILD_EXAMPLES=OFF
 )
 
-add_project(wasm3 SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/wasm3
+ExternalProject_Add(wasm3 SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/wasm3
+    ${COMMON_ARGS}
     CMAKE_ARGS
         -DBUILD_NATIVE=OFF
 )
 
-add_project(snappy SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/snappy
+ExternalProject_Add(snappy SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/snappy
+    ${COMMON_ARGS}
     CMAKE_ARGS
         -DSNAPPY_BUILD_TESTS=OFF
 )
 
-add_project(brotli SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/brotli
+ExternalProject_Add(brotli SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/brotli
+    ${COMMON_ARGS}
     CMAKE_ARGS
         -DBROTLI_DISABLE_TESTS=ON
 )
 
-add_project(Catch2 SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Catch2
+ExternalProject_Add(Catch2 SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Catch2
+    ${COMMON_ARGS}
     CMAKE_ARGS
         -DCATCH_INSTALL_DOCS=OFF
 )
 
-add_project(tinygltf SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tinygltf
+ExternalProject_Add(tinygltf SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tinygltf
+    ${COMMON_ARGS}
     CMAKE_ARGS
         -DTINYGLTF_BUILD_LOADER_EXAMPLE=OFF
 )
 
-add_project(cpp-taskflow SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cpp-taskflow
+ExternalProject_Add(cpp-taskflow SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cpp-taskflow
+    ${COMMON_ARGS}
     CMAKE_ARGS
         -DTF_BUILD_TESTS=OFF
         -DTF_BUILD_EXAMPLES=OFF
 )
 
-add_project(boost SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/boost
+ExternalProject_Add(boost
+    GIT_REPOSITORY https://github.com/boostorg/boost.git
+    GIT_TAG boost-1.77.0
+    PATCH_COMMAND cd libs/context && git apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/boost-context.patch
     LIST_SEPARATOR |
+    ${COMMON_ARGS}
     CMAKE_ARGS
         -DCMAKE_ASM_COMPILER=as
         -DBOOST_INCLUDE_LIBRARIES=context|filesystem|stacktrace|atomic
+        -BOOST_USE_VALGRIND=${VALGRIND}
 )
 
-add_project(kissfft SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/kissfft
+ExternalProject_Add(kissfft SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/kissfft
+    ${COMMON_ARGS}
     CMAKE_ARGS
         -DCMAKE_INSTALL_INCLUDEDIR=${CMAKE_INSTALL_PREFIX}/include
         -DCMAKE_INSTALL_LIBDIR=${CMAKE_INSTALL_PREFIX}/lib
@@ -120,28 +132,70 @@ add_project(kissfft SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/kissfft
         -DKISSFFT_TOOLS=OFF
 )
 
-add_project(xxHash 
+ExternalProject_Add(xxHash 
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/xxHash/cmake_unofficial
+    ${COMMON_ARGS}
     CMAKE_ARGS
         -DBUILD_SHARED_LIBS=OFF
 )
 
-ExternalProject_Add(
-  backtrace
-  URL ${CMAKE_CURRENT_SOURCE_DIR}/libbacktrace
-  CONFIGURE_COMMAND sh configure --prefix=${INSTALL_ROOT} --target=${CONFIGURE_TARGET}
-  BUILD_COMMAND make
-  INSTALL_COMMAND make install
-  BUILD_IN_SOURCE 1
+if(WIN32)
+    set(CONFIGURE_TARGET x86_64-w64-windows-gnu)
+    ExternalProject_Add(
+        backtrace
+        URL ${CMAKE_CURRENT_SOURCE_DIR}/libbacktrace
+        CONFIGURE_COMMAND sh configure --prefix=${INSTALL_ROOT} --target=${CONFIGURE_TARGET}
+        BUILD_COMMAND make
+        INSTALL_COMMAND make install
+        BUILD_IN_SOURCE 1
+    )
+endif()
+
+add_library(stb INTERFACE)
+target_include_directories(stb INTERFACE
+    $<INSTALL_INTERFACE:include>
+)
+add_library(stb_vorbis STATIC stb/stb_vorbis.c)
+target_include_directories(stb_vorbis PRIVATE stb)
+install(DIRECTORY stb
+    DESTINATION include
+    FILES_MATCHING 
+        PATTERN "*.h" PATTERN "*.hpp" PATTERN "*.hxx"
+        PATTERN ".git" EXCLUDE
+        PATTERN ".git*" EXCLUDE
+)
+install(TARGETS stb stb_vorbis EXPORT stbTargets)
+install(EXPORT stbTargets
+    FILE stbConfig.cmake
+    DESTINATION lib/cmake/stb
+)
+
+install(DIRECTORY bgfx/examples/common/imgui
+    DESTINATION include/bgfx/examples
+    FILES_MATCHING 
+        PATTERN "*.h" PATTERN "*.hpp" PATTERN "*.hxx"
+        PATTERN ".git" EXCLUDE
+        PATTERN ".git*" EXCLUDE
+)
+
+install(DIRECTORY bgfx/3rdparty/iconfontheaders
+    DESTINATION include
+    FILES_MATCHING 
+        PATTERN "*.h" PATTERN "*.hpp" PATTERN "*.hxx"
+        PATTERN ".git" EXCLUDE
+        PATTERN ".git*" EXCLUDE
+)
+
+install(DIRECTORY bgfx/3rdparty/dear-imgui
+    DESTINATION include
+    FILES_MATCHING 
+        PATTERN "*.h" PATTERN "*.hpp" PATTERN "*.hxx"
+        PATTERN ".git" EXCLUDE
+        PATTERN ".git*" EXCLUDE
 )
 
 add_header_lib(linalg linalg)
 add_header_lib(miniaudio miniaudio)
-add_header_lib(stb stb)
 add_header_lib(utf8.h utf8.h)
 add_header_lib(pdqsort pdqsort)
 add_header_lib(spdlog spdlog/include/)
-
-# add_project(ImGuizmo URL ${CMAKE_CURRENT_SOURCE_DIR}/ImGuizmo)
-# add_project(imgui_club URL ${CMAKE_CURRENT_SOURCE_DIR}/imgui_club)
-# add_project(implot URL ${CMAKE_CURRENT_SOURCE_DIR}/implot)

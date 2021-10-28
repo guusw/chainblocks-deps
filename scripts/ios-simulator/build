@@ -1,0 +1,8 @@
+#!/bin/bash
+
+brew install openssl@1.1
+
+mkdir build
+cd build
+cmake -GNinja -DCMAKE_SYSTEM_NAME=iOS -DX86_IOS_SIMULATOR=1 ..
+cmake --build . --target install

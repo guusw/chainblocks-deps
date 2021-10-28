@@ -1,0 +1,8 @@
+#!/bin/bash
+
+brew install openssl@1.1
+
+mkdir build
+cd build
+cmake -GXcode -DCMAKE_BUILD_TYPE=Debug ..
+cmake --build . --target install

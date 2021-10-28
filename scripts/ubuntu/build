@@ -1,0 +1,8 @@
+#!/bin/bash
+
+sudo apt-get -y update
+sudo apt-get -y install build-essential git cmake wget clang ninja-build xorg-dev libdbus-1-dev libssl-dev mesa-utils
+mkdir build
+cd build
+cmake -GNinja ..
+cmake --build . --target install

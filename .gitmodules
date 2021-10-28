@@ -1,0 +1,81 @@
+[submodule "bgfx"]
+	path = bgfx
+	url = https://github.com/chainblocks/bgfx.git
+[submodule "bimg"]
+	path = bimg
+	url = https://github.com/chainblocks/bimg.git
+[submodule "brotli"]
+	path = brotli
+	url = https://github.com/chainblocks/brotli.git
+[submodule "bx"]
+	path = bx
+	url = https://github.com/chainblocks/bx.git
+[submodule "Catch2"]
+	path = Catch2
+	url = https://github.com/chainblocks/Catch2.git
+[submodule "cpp-taskflow"]
+	path = cpp-taskflow
+	url = https://github.com/chainblocks/cpp-taskflow.git
+[submodule "ImGuizmo"]
+	path = ImGuizmo
+	url = https://github.com/chainblocks/ImGuizmo.git
+[submodule "imgui_club"]
+	path = imgui_club
+	url = https://github.com/chainblocks/imgui_club.git
+[submodule "implot"]
+	path = implot
+	url = https://github.com/chainblocks/implot.git
+[submodule "json"]
+	path = json
+	url = https://github.com/chainblocks/json.git
+[submodule "kcp"]
+	path = kcp
+	url = https://github.com/chainblocks/kcp.git
+[submodule "kissfft"]
+	path = kissfft
+	url = https://github.com/chainblocks/kissfft.git
+[submodule "libbacktrace"]
+	path = libbacktrace
+	url = https://github.com/chainblocks/libbacktrace.git
+[submodule "linalg"]
+	path = linalg
+	url = https://github.com/chainblocks/linalg.git
+[submodule "magic_enum"]
+	path = magic_enum
+	url = https://github.com/chainblocks/magic_enum.git
+[submodule "miniaudio"]
+	path = miniaudio
+	url = https://github.com/chainblocks/miniaudio.git
+[submodule "nameof"]
+	path = nameof
+	url = https://github.com/chainblocks/nameof.git
+[submodule "pareto"]
+	path = pareto
+	url = https://github.com/chainblocks/pareto.git
+[submodule "pdqsort"]
+	path = pdqsort
+	url = https://github.com/chainblocks/pdqsort.git
+[submodule "replxx"]
+	path = replxx
+	url = https://github.com/chainblocks/replxx.git
+[submodule "SDL"]
+	path = SDL
+	url = https://github.com/libsdl-org/SDL.git
+[submodule "snappy"]
+	path = snappy
+	url = https://github.com/chainblocks/snappy.git
+[submodule "spdlog"]
+	path = spdlog
+	url = https://github.com/chainblocks/spdlog.git
+[submodule "stb"]
+	path = stb
+	url = https://github.com/chainblocks/stb.git
+[submodule "tinygltf"]
+	path = tinygltf
+	url = https://github.com/chainblocks/tinygltf.git
+[submodule "utf8.h"]
+	path = utf8.h
+	url = https://github.com/chainblocks/utf8.h.git
+[submodule "xxHash"]
+	path = xxHash
+	url = https://github.com/chainblocks/xxHash.git
