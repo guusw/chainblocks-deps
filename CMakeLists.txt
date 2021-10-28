@@ -62,6 +62,7 @@ ExternalProject_Add(SDL SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/SDL
 
 ExternalProject_Add(bgfx
     GIT_REPOSITORY https://github.com/bkaradzic/bgfx.cmake.git
+    GIT_TAG b7b7cd7bdda84433490dca8a12cd931f79debeff
     GIT_SUBMODULES ""
     PATCH_COMMAND git apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/bgfx.cmake.patch
     ${COMMON_ARGS}
