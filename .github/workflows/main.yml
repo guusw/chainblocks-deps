@@ -17,7 +17,7 @@ jobs:
             os: ubuntu-latest
           - script: ubuntu-valgrind
             os: ubuntu-latest
-    runs-on: $${{matrix.os}}
+    runs-on: ${{matrix.os}}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -41,7 +41,7 @@ jobs:
             os: windows-latest
             msystem: MINGW64
             arch: x86_64
-    runs-on: $${{matrix.os}}
+    runs-on: ${{matrix.os}}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -80,7 +80,7 @@ jobs:
             os: macos-latest
           - script: ios-simulator
             os: macos-latest
-    runs-on: $${{matrix.os}}
+    runs-on: ${{matrix.os}}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -95,30 +95,3 @@ jobs:
           name: deps
           path: install
           if-no-files-found: error
-  iOS:
-    runs-on: macos-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
-          submodules: recursive
-      - name: Set up dependencies
-        run: |
-          sudo xcode-select --switch /Applications/Xcode.app
-          brew install boost cmake clang-format
-          brew install openssl@1.1
-          rustup update
-          rustup target add x86_64-apple-ios
-          rustup target add aarch64-apple-ios
-      - name: Build device
-        run: |
-          mkdir build
-          cd build
-          cmake -G Xcode -DCMAKE_BUILD_TYPE=Debug -DCMAKE_SYSTEM_NAME=iOS ..
-          xcodebuild -target cb_static -sdk iphoneos -arch arm64
-      - name: Build simulator x86
-        run: |
-          cd build
-          cmake -G Xcode -DCMAKE_BUILD_TYPE=Debug -DCMAKE_SYSTEM_NAME=iOS -DX86_IOS_SIMULATOR=1 ..
-          xcodebuild -target cb_static -sdk iphonesimulator -arch x86_64
