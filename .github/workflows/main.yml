@@ -1,36 +1,124 @@
-# This is a basic workflow to help you get started with Actions
+name: Automated Build
 
-name: CI
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main ]
+    branches:
+      - main
   pull_request:
-    branches: [ main ]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+  linux:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - script: ubuntu
+            os: ubuntu-latest
+          - script: ubuntu-valgrind
+            os: ubuntu-latest
+    runs-on: $${{matrix.os}}
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          submodules: recursive
+      - name: Build
+        run: bash scripts/${{matrix.script}}
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: deps
+          path: install
+          if-no-files-found: error
+  windows:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - script: windows
+            os: windows-latest
+            msystem: MINGW64
+            arch: x86_64
+    runs-on: $${{matrix.os}}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          submodules: recursive
+      - name: Set up MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: ${{ matrix.msystem }}
+          release: false
+          path-type: inherit
+          install: >-
+            base-devel
+            mingw-w64-${{ matrix.arch }}-toolchain
+            mingw-w64-${{ matrix.arch }}-cmake
+            mingw-w64-${{ matrix.arch }}-ninja
+            git
+            wget
+      - name: Build
+        run: bash scripts/${{matrix.script}}
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: deps
+          path: install
+          if-no-files-found: error
+  macos:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - script: macos
+            os: macos-latest
+          - script: ios
+            os: macos-latest
+          - script: ios-simulator
+            os: macos-latest
+    runs-on: $${{matrix.os}}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          submodules: recursive
+      - name: Build
+        run: bash scripts/${{matrix.script}}
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: deps
+          path: install
+          if-no-files-found: error
+  iOS:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          submodules: recursive
+      - name: Set up dependencies
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          sudo xcode-select --switch /Applications/Xcode.app
+          brew install boost cmake clang-format
+          brew install openssl@1.1
+          rustup update
+          rustup target add x86_64-apple-ios
+          rustup target add aarch64-apple-ios
+      - name: Build device
+        run: |
+          mkdir build
+          cd build
+          cmake -G Xcode -DCMAKE_BUILD_TYPE=Debug -DCMAKE_SYSTEM_NAME=iOS ..
+          xcodebuild -target cb_static -sdk iphoneos -arch arm64
+      - name: Build simulator x86
+        run: |
+          cd build
+          cmake -G Xcode -DCMAKE_BUILD_TYPE=Debug -DCMAKE_SYSTEM_NAME=iOS -DX86_IOS_SIMULATOR=1 ..
+          xcodebuild -target cb_static -sdk iphonesimulator -arch x86_64
