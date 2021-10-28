@@ -1,16 +1,16 @@
 cmake_minimum_required(VERSION 3.21)
 project(Deps)
 
-set(BUILD_ID "x86_64-pc-windows-gnu" CACHE STRING "The identifier for the build")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+include(Platform)
+include(ExternalProject)
+
+set(BUILD_ID "${TARGET_ID}" CACHE STRING "The identifier for the build")
 set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/install/${BUILD_ID})
 
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
-
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-include(Platform)
-include(ExternalProject)
 
 set(COMMON_ARGS 
     CMAKE_ARGS 
@@ -62,8 +62,7 @@ ExternalProject_Add(SDL SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/SDL
 
 ExternalProject_Add(bgfx
     GIT_REPOSITORY https://github.com/bkaradzic/bgfx.cmake.git
-    GIT_TAG v1.115.7908-b7b7cd7
-    GIT_NO_SUBMODULES
+    GIT_SUBMODULES ""
     PATCH_COMMAND git apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/bgfx.cmake.patch
     ${COMMON_ARGS}
     CMAKE_ARGS 
