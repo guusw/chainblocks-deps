@@ -4,5 +4,5 @@ brew install openssl@1.1
 
 mkdir build
 cd build
-cmake -DCMAKE_SYSTEM_NAME=iOS ..
+cmake -G Xcode -DCMAKE_SYSTEM_NAME=iOS ..
 cmake --build . --target install
