@@ -2,7 +2,9 @@
 
 brew install openssl@1.1
 
+TOOLCHAIN=`pwd`/cmake/ios-cmake/ios.toolchain.cmake
+
 mkdir build
 cd build
-cmake -G Xcode -DCMAKE_SYSTEM_NAME=iOS ..
+cmake -G Xcode -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN ..
 cmake --build . --target install

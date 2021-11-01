@@ -82,3 +82,6 @@
 [submodule "wasm3"]
 	path = wasm3
 	url = https://github.com/chainblocks/wasm3.git
+[submodule "cmake/ios-cmake"]
+	path = cmake/ios-cmake
+	url = https://github.com/leetal/ios-cmake.git
