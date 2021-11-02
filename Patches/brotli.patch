@@ -1,74 +1,18 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4ff3401..1170f3e 100644
+index 4ff3401..4900392 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -130,7 +130,9 @@ else()
+@@ -215,8 +215,11 @@ if(BROTLI_PARENT_DIRECTORY)
  endif()
- unset(LOG2_RES)
  
--set(BROTLI_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/c/include")
-+set(BROTLI_C_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/c/include")
-+set(BROTLI_INCLUDE_DIRS $<BUILD_INTERFACE:${BROTLI_C_INCLUDE_DIR}> $<INSTALL_INTERFACE:include>)
-+mark_as_advanced(BROTLI_C_INCLUDE_DIR)
- mark_as_advanced(BROTLI_INCLUDE_DIRS)
- 
- set(BROTLI_LIBRARIES_CORE brotlienc brotlidec brotlicommon)
-@@ -219,33 +221,31 @@ add_executable(brotli ${BROTLI_CLI_C})
- target_link_libraries(brotli ${BROTLI_LIBRARIES_STATIC})
+ # Build the brotli executable
+-add_executable(brotli ${BROTLI_CLI_C})
+-target_link_libraries(brotli ${BROTLI_LIBRARIES_STATIC})
++option(BROTLI_BUILD_TOOLS "Build executable brotli tool" ON)
++if(BROTLI_BUILD_TOOLS)
++  add_executable(brotli ${BROTLI_CLI_C})
++  target_link_libraries(brotli ${BROTLI_LIBRARIES_STATIC})
++endif()
  
  # Installation
--if(NOT BROTLI_EMSCRIPTEN)
- if(NOT BROTLI_BUNDLED_MODE)
-   install(
--    TARGETS brotli
-+    TARGETS brotli EXPORT ${PROJECT_NAME}Targets
-     RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-   )
- 
-   install(
--    TARGETS ${BROTLI_LIBRARIES_CORE}
-+    TARGETS ${BROTLI_LIBRARIES_CORE} EXPORT ${PROJECT_NAME}Targets
-     ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-     RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-   )
- 
-   install(
--    TARGETS ${BROTLI_LIBRARIES_CORE_STATIC}
-+    TARGETS ${BROTLI_LIBRARIES_CORE_STATIC} EXPORT ${PROJECT_NAME}Targets
-     ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-     RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-   )
- 
-   install(
--    DIRECTORY ${BROTLI_INCLUDE_DIRS}/brotli
-+    DIRECTORY ${BROTLI_C_INCLUDE_DIR}/brotli
-     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
-   )
- endif()  # BROTLI_BUNDLED_MODE
--endif()  # BROTLI_EMSCRIPTEN
- 
- # Tests
- 
-@@ -405,7 +405,6 @@ transform_pc_file("scripts/libbrotlidec.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/libb
- 
- transform_pc_file("scripts/libbrotlienc.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/libbrotlienc.pc" "${BROTLI_VERSION}")
- 
--if(NOT BROTLI_EMSCRIPTEN)
- if(NOT BROTLI_BUNDLED_MODE)
-   install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libbrotlicommon.pc"
-     DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
-@@ -413,8 +412,11 @@ if(NOT BROTLI_BUNDLED_MODE)
-     DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
-   install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libbrotlienc.pc"
-     DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
-+  install(EXPORT ${PROJECT_NAME}Targets
-+    FILE ${PROJECT_NAME}Config.cmake
-+    DESTINATION lib/cmake/${PROJECT_NAME}
-+  )
- endif()  # BROTLI_BUNDLED_MODE
--endif()  # BROTLI_EMSCRIPTEN
- 
- if (ENABLE_COVERAGE STREQUAL "yes")
-   SETUP_TARGET_FOR_COVERAGE(coverage test coverage)
+ if(NOT BROTLI_EMSCRIPTEN)

@@ -49,6 +49,71 @@ function(add_header_lib NAME INCLUDE_PATH)
     )
 endfunction()
 
+# ExternalProject_Add(SDL SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/SDL
+#     ${COMMON_ARGS}
+#     CMAKE_ARGS 
+#         -DSDL_RENDER_DISABLED=ON
+# )
+
+# ExternalProject_Add(bgfx
+#     GIT_REPOSITORY https://github.com/bkaradzic/bgfx.cmake.git
+#     GIT_TAG b7b7cd7bdda84433490dca8a12cd931f79debeff
+#     GIT_SUBMODULES ""
+#     PATCH_COMMAND git restore . && git apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/bgfx.cmake.patch
+#     ${COMMON_ARGS}
+#     CMAKE_ARGS 
+#         -DBX_DIR=${CMAKE_CURRENT_SOURCE_DIR}/bx
+#         -DBIMG_DIR=${CMAKE_CURRENT_SOURCE_DIR}/bimg
+#         -DBGFX_DIR=${CMAKE_CURRENT_SOURCE_DIR}/bgfx
+#         -DBIMG_DECODE_ENABLE=OFF
+#         -DBGFX_BUILD_EXAMPLES=OFF
+# )
+
+ExternalProject_Add(snappy SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/snappy
+    ${COMMON_ARGS}
+    CMAKE_ARGS
+        -DSNAPPY_BUILD_TESTS=OFF
+)
+
+ExternalProject_Add(brotli SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/brotli
+    PATCH_COMMAND git restore . && git apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/brotli.patch
+    ${COMMON_ARGS}
+    CMAKE_ARGS
+        -DBROTLI_DISABLE_TESTS=ON
+        -DBROTLI_BUILD_TOOLS=OFF
+)
+
+ExternalProject_Add(Catch2 SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Catch2
+    ${COMMON_ARGS}
+    CMAKE_ARGS
+        -DCATCH_INSTALL_DOCS=OFF
+)
+
+ExternalProject_Add(tinygltf SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tinygltf
+    ${COMMON_ARGS}
+    CMAKE_ARGS
+        -DTINYGLTF_BUILD_LOADER_EXAMPLE=OFF
+)
+
+ExternalProject_Add(cpp-taskflow SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cpp-taskflow
+    ${COMMON_ARGS}
+    CMAKE_ARGS
+        -DTF_BUILD_TESTS=OFF
+        -DTF_BUILD_EXAMPLES=OFF
+)
+
+ExternalProject_Add(kissfft SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/kissfft
+    ${COMMON_ARGS}
+    CMAKE_ARGS
+        -DCMAKE_INSTALL_INCLUDEDIR=${CMAKE_INSTALL_PREFIX}/include
+        -DCMAKE_INSTALL_LIBDIR=${CMAKE_INSTALL_PREFIX}/lib
+        -DKISSFFT_STATIC=ON
+        -DKISSFFT_TEST=OFF
+        -DKISSFFT_TOOLS=OFF
+)
+
+########### Tested below
+
 ExternalProject_Add(json SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/json
     ${COMMON_ARGS}
     CMAKE_ARGS
@@ -92,76 +157,13 @@ ExternalProject_Add(pareto SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pareto
         -DBUILD_BENCHMARKS=OFF
 )
 
-# ExternalProject_Add(SDL SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/SDL
+# ExternalProject_Add(wasm3 SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/wasm3
+#     PATCH_COMMAND git restore . && git apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/wasm3.patch
 #     ${COMMON_ARGS}
-#     CMAKE_ARGS 
-#         -DSDL_RENDER_DISABLED=ON
+#     CMAKE_ARGS
+#         -DBUILD_NATIVE=OFF
+#         -DBUILD_WASM3=OFF
 # )
-
-# ExternalProject_Add(bgfx
-#     GIT_REPOSITORY https://github.com/bkaradzic/bgfx.cmake.git
-#     GIT_TAG b7b7cd7bdda84433490dca8a12cd931f79debeff
-#     GIT_SUBMODULES ""
-#     PATCH_COMMAND git restore . && git apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/bgfx.cmake.patch
-#     ${COMMON_ARGS}
-#     CMAKE_ARGS 
-#         -DBX_DIR=${CMAKE_CURRENT_SOURCE_DIR}/bx
-#         -DBIMG_DIR=${CMAKE_CURRENT_SOURCE_DIR}/bimg
-#         -DBGFX_DIR=${CMAKE_CURRENT_SOURCE_DIR}/bgfx
-#         -DBIMG_DECODE_ENABLE=OFF
-#         -DBGFX_BUILD_EXAMPLES=OFF
-# )
-
-ExternalProject_Add(wasm3 SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/wasm3
-    PATCH_COMMAND git restore . && git apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/wasm3.patch
-    ${COMMON_ARGS}
-    CMAKE_ARGS
-        -DBUILD_NATIVE=OFF
-        -DBUILD_WASM3=OFF
-)
-
-ExternalProject_Add(snappy SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/snappy
-    ${COMMON_ARGS}
-    CMAKE_ARGS
-        -DSNAPPY_BUILD_TESTS=OFF
-)
-
-ExternalProject_Add(brotli SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/brotli
-    ${COMMON_ARGS}
-    CMAKE_ARGS
-        -DBROTLI_DISABLE_TESTS=ON
-)
-
-ExternalProject_Add(Catch2 SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Catch2
-    ${COMMON_ARGS}
-    CMAKE_ARGS
-        -DCATCH_INSTALL_DOCS=OFF
-)
-
-ExternalProject_Add(tinygltf SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tinygltf
-    ${COMMON_ARGS}
-    CMAKE_ARGS
-        -DTINYGLTF_BUILD_LOADER_EXAMPLE=OFF
-)
-
-ExternalProject_Add(cpp-taskflow SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cpp-taskflow
-    ${COMMON_ARGS}
-    CMAKE_ARGS
-        -DTF_BUILD_TESTS=OFF
-        -DTF_BUILD_EXAMPLES=OFF
-)
-
-ExternalProject_Add(kissfft SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/kissfft
-    ${COMMON_ARGS}
-    CMAKE_ARGS
-        -DCMAKE_INSTALL_INCLUDEDIR=${CMAKE_INSTALL_PREFIX}/include
-        -DCMAKE_INSTALL_LIBDIR=${CMAKE_INSTALL_PREFIX}/lib
-        -DKISSFFT_STATIC=ON
-        -DKISSFFT_TEST=OFF
-        -DKISSFFT_TOOLS=OFF
-)
-
-########### Tested below
 
 # if(WIN32 OR IOS)
 #     set(BOOST_CMAKE_ARGS -DCMAKE_ASM_COMPILER=as)
