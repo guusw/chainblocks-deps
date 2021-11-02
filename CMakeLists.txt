@@ -50,28 +50,33 @@ function(add_header_lib NAME INCLUDE_PATH)
 endfunction()
 
 ExternalProject_Add(json SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/json ${COMMON_ARGS})
+
 ExternalProject_Add(kcp SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/kcp ${COMMON_ARGS}
     CMAKE_ARGS
         -DBUILD_TESTING=OFF
 )
+
 ExternalProject_Add(replxx SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/replxx 
     ${COMMON_ARGS}
     CMAKE_ARGS
         -DREPLXX_BUILD_EXAMPLES=OFF
         -DREPLXX_BUILD_PACKAGE=OFF
 )
+
 ExternalProject_Add(magic_enum SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/magic_enum 
     ${COMMON_ARGS}
     CMAKE_ARGS
         -DMAGIC_ENUM_OPT_BUILD_EXAMPLES=OFF
         -DMAGIC_ENUM_OPT_BUILD_TESTS=OFF
 )
+
 ExternalProject_Add(nameof SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/nameof 
     ${COMMON_ARGS}
     CMAKE_ARGS
         -DNAMEOF_OPT_BUILD_EXAMPLES=OFF
         -DNAMEOF_OPT_BUILD_TESTS=OFF
 )
+
 ExternalProject_Add(pareto SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pareto
     ${COMMON_ARGS}
     CMAKE_ARGS
