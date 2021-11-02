@@ -116,8 +116,7 @@ if(WIN32 OR IOS)
     set(BOOST_CMAKE_ARGS -DCMAKE_ASM_COMPILER=as)
 endif()
 ExternalProject_Add(boost
-    GIT_REPOSITORY https://github.com/boostorg/boost.git
-    GIT_TAG boost-1.77.0
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/boost
     PATCH_COMMAND cd libs/context && git restore . && git apply --verbose --reject --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/boost-context.patch
     LIST_SEPARATOR |
     ${COMMON_ARGS}

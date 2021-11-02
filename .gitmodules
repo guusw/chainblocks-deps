@@ -85,3 +85,6 @@
 [submodule "cmake/ios-cmake"]
 	path = cmake/ios-cmake
 	url = https://github.com/leetal/ios-cmake.git
+[submodule "boost"]
+	path = boost
+	url = git@github.com:boostorg/boost.git
