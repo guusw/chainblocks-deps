@@ -57,8 +57,18 @@ ExternalProject_Add(replxx SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/replxx
         -DREPLXX_BUILD_EXAMPLES=OFF
         -DREPLXX_BUILD_PACKAGE=OFF
 )
-ExternalProject_Add(magic_enum SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/magic_enum ${COMMON_ARGS})
-ExternalProject_Add(nameof SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/nameof ${COMMON_ARGS})
+ExternalProject_Add(magic_enum SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/magic_enum 
+    ${COMMON_ARGS}
+    CMAKE_ARGS
+        -DMAGIC_ENUM_OPT_BUILD_EXAMPLES=OFF
+        -DMAGIC_ENUM_OPT_BUILD_TESTS=OFF
+)
+ExternalProject_Add(nameof SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/nameof 
+    ${COMMON_ARGS}
+    CMAKE_ARGS
+        -DNAMEOF_OPT_BUILD_EXAMPLES=OFF
+        -DNAMEOF_OPT_BUILD_TESTS=OFF
+)
 ExternalProject_Add(pareto SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pareto
     ${COMMON_ARGS}
     CMAKE_ARGS
