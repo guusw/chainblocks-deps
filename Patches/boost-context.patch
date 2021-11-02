@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a0c2e92..d4e25b5 100644
+index a0c2e92..becbe2e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -103,13 +103,13 @@ message(STATUS "Boost.Context: "
+@@ -103,7 +103,7 @@ message(STATUS "Boost.Context: "
  
  if(BOOST_CONTEXT_IMPLEMENTATION STREQUAL "fcontext")
    if(BOOST_CONTEXT_ASSEMBLER STREQUAL gas)
@@ -11,10 +11,3 @@ index a0c2e92..d4e25b5 100644
        enable_language(ASM-ATT)
      else()
        enable_language(ASM)
-     endif()
-   else()
--    enable_language(ASM_MASM)
-+    enable_language(ASM_MASM) 
-   endif()
- endif()
- 
