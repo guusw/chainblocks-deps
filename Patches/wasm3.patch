@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0862181..c86dc39 100755
+index 9f6faef..6cf739e 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -26,6 +26,7 @@ endif()
@@ -10,7 +10,7 @@ index 0862181..c86dc39 100755
  
  set(OUT_FILE "wasm3")
  
-@@ -94,9 +95,10 @@ set(CMAKE_CXX_STANDARD 11)
+@@ -93,9 +94,10 @@ set(CMAKE_CXX_STANDARD 11)
  set(CMAKE_CXX_STANDARD_REQUIRED YES)
  set(CMAKE_CXX_EXTENSIONS NO)
  
@@ -22,7 +22,44 @@ index 0862181..c86dc39 100755
  
  #-fno-optimize-sibling-calls
  
-@@ -224,3 +226,13 @@ message("Debug flags:   ${CMAKE_C_FLAGS_DEBUG}")
+@@ -180,11 +182,15 @@ else()
+   set(CMAKE_EXE_LINKER_FLAGS_DEBUG "-O0")
+   set(CMAKE_EXE_LINKER_FLAGS_RELEASE "-O3")
+ 
++  if(BUILD_WASM3)
+   target_link_libraries(${OUT_FILE} m)
++  endif()
+ 
+ endif()
+ 
++if(BUILD_WASM3)
+ target_link_libraries(${OUT_FILE} m3)
++endif()
+ 
+ if(BUILD_WASI MATCHES "simple")
+   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Dd_m3HasWASI")
+@@ -205,9 +211,12 @@ elseif(BUILD_WASI MATCHES "uvwasi")
+     add_subdirectory(${uvwasi_SOURCE_DIR} ${uvwasi_BINARY_DIR} EXCLUDE_FROM_ALL)
+   endif()
+   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Dd_m3HasUVWASI")
++  if(BUILD_WASM3)
+   target_link_libraries(${OUT_FILE} uvwasi_a uv_a)
++  endif()
+ endif()
+ 
++if(BUILD_WASM3)
+ check_ipo_supported(RESULT result)
+ if(result AND NOT WASIENV) # TODO: LTO breaks wasm imports
+   set_property(TARGET ${OUT_FILE} PROPERTY INTERPROCEDURAL_OPTIMIZATION True)
+@@ -215,6 +224,7 @@ if(result AND NOT WASIENV) # TODO: LTO breaks wasm imports
+ else()
+   message("LTO:        OFF")
+ endif()
++endif()
+ 
+ add_subdirectory(source)
+ 
+@@ -223,3 +233,13 @@ message("Debug flags:   ${CMAKE_C_FLAGS_DEBUG}")
  message("Release flags: ${CMAKE_C_FLAGS_RELEASE}")
  
  message("----")
@@ -37,10 +74,10 @@ index 0862181..c86dc39 100755
 +  DESTINATION lib/cmake/${PROJECT_NAME}
 +)
 diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt
-index 070c7fa..9faea8a 100644
+index ecfd40b..7cb19e9 100644
 --- a/source/CMakeLists.txt
 +++ b/source/CMakeLists.txt
-@@ -19,7 +19,10 @@ set(sources
+@@ -18,7 +18,10 @@ set(sources
  
  add_library(m3 STATIC ${sources})
  
@@ -52,7 +89,7 @@ index 070c7fa..9faea8a 100644
  
  target_compile_features(m3 PRIVATE c_std_99)
  
-@@ -56,3 +59,4 @@ elseif(BUILD_WASI MATCHES "uvwasi")
+@@ -53,3 +56,4 @@ elseif(BUILD_WASI MATCHES "uvwasi")
      target_compile_definitions(m3 PUBLIC d_m3HasUVWASI)
      include_directories("${libuv_SOURCE_DIR}/include")
  endif()
