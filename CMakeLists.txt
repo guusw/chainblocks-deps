@@ -118,7 +118,7 @@ endif()
 ExternalProject_Add(boost
     GIT_REPOSITORY https://github.com/boostorg/boost.git
     GIT_TAG boost-1.77.0
-    PATCH_COMMAND cd libs/context && git restore . && git apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/boost-context.patch
+    PATCH_COMMAND cd libs/context && git restore . && git apply --verbose --reject --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/boost-context.patch
     LIST_SEPARATOR |
     ${COMMON_ARGS}
     CMAKE_ARGS
