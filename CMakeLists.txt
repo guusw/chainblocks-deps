@@ -74,7 +74,7 @@ ExternalProject_Add(pareto SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pareto
 #     GIT_REPOSITORY https://github.com/bkaradzic/bgfx.cmake.git
 #     GIT_TAG b7b7cd7bdda84433490dca8a12cd931f79debeff
 #     GIT_SUBMODULES ""
-#     PATCH_COMMAND git apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/bgfx.cmake.patch
+#     PATCH_COMMAND git restore . && git apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/bgfx.cmake.patch
 #     ${COMMON_ARGS}
 #     CMAKE_ARGS 
 #         -DBX_DIR=${CMAKE_CURRENT_SOURCE_DIR}/bx
@@ -85,11 +85,11 @@ ExternalProject_Add(pareto SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pareto
 # )
 
 ExternalProject_Add(wasm3 SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/wasm3
+    PATCH_COMMAND git restore . && git apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/wasm3.patch
     ${COMMON_ARGS}
     CMAKE_ARGS
         -DBUILD_NATIVE=OFF
         -DBUILD_WASM3=OFF
-        -DCMAKE_MACOSX_BUNDLE=OFF
 )
 
 ExternalProject_Add(snappy SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/snappy
