@@ -1,8 +1,28 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0862181..9039759 100755
+index 0862181..c86dc39 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -224,3 +224,13 @@ message("Debug flags:   ${CMAKE_C_FLAGS_DEBUG}")
+@@ -26,6 +26,7 @@ endif()
+ set_property(CACHE BUILD_WASI PROPERTY STRINGS none simple uvwasi metawasi)
+ 
+ option(BUILD_NATIVE "Build with machine-specific optimisations" ON)
++option(BUILD_WASM3 "Build the wasm3 executable" ON)
+ 
+ set(OUT_FILE "wasm3")
+ 
+@@ -94,9 +95,10 @@ set(CMAKE_CXX_STANDARD 11)
+ set(CMAKE_CXX_STANDARD_REQUIRED YES)
+ set(CMAKE_CXX_EXTENSIONS NO)
+ 
+-
++if(BUILD_WASM3)
+ file(GLOB app_srcs "${APP_DIR}/*.c")
+ add_executable(${OUT_FILE} ${app_srcs})
++endif()
+ 
+ #-fno-optimize-sibling-calls
+ 
+@@ -224,3 +226,13 @@ message("Debug flags:   ${CMAKE_C_FLAGS_DEBUG}")
  message("Release flags: ${CMAKE_C_FLAGS_RELEASE}")
  
  message("----")
