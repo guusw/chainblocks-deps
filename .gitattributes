@@ -1,3 +1,0 @@
-*.txt text eol=lf
-*.patch text eol=lf
-*.cmake text eol=lf
