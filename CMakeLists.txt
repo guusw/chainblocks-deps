@@ -112,6 +112,9 @@ endfunction()
 #         -DTF_BUILD_EXAMPLES=OFF
 # )
 
+if(WIN32)
+    set(BOOST_CMAKE_ARGS -DCMAKE_ASM_COMPILER=as)
+endif()
 ExternalProject_Add(boost
     GIT_REPOSITORY https://github.com/boostorg/boost.git
     GIT_TAG boost-1.77.0
@@ -119,9 +122,9 @@ ExternalProject_Add(boost
     LIST_SEPARATOR |
     ${COMMON_ARGS}
     CMAKE_ARGS
-        -DCMAKE_ASM_COMPILER=as
         -DBOOST_INCLUDE_LIBRARIES=context|filesystem|stacktrace|atomic
-        -BOOST_USE_VALGRIND=${VALGRIND}
+        -DBOOST_USE_VALGRIND=${VALGRIND}
+        ${BOOST_CMAKE_ARGS}
 )
 
 # ExternalProject_Add(kissfft SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/kissfft
