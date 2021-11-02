@@ -112,7 +112,7 @@ endfunction()
 #         -DTF_BUILD_EXAMPLES=OFF
 # )
 
-if(WIN32)
+if(WIN32 OR IOS)
     set(BOOST_CMAKE_ARGS -DCMAKE_ASM_COMPILER=as)
 endif()
 ExternalProject_Add(boost
