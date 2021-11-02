@@ -139,6 +139,7 @@ ExternalProject_Add(xxHash
     ${COMMON_ARGS}
     CMAKE_ARGS
         -DBUILD_SHARED_LIBS=OFF
+        -DXXHASH_BUILD_XXHSUM=OFF
 )
 
 if(WIN32)
