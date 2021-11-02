@@ -89,6 +89,7 @@ ExternalProject_Add(wasm3 SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/wasm3
     CMAKE_ARGS
         -DBUILD_NATIVE=OFF
         -DBUILD_WASM3=OFF
+        -DCMAKE_MACOSX_BUNDLE=OFF
 )
 
 ExternalProject_Add(snappy SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/snappy
