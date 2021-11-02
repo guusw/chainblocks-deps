@@ -218,8 +218,8 @@ ExternalProject_Add(kissfft SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/kissfft
 #         PATTERN ".git*" EXCLUDE
 # )
 
-# add_header_lib(linalg linalg)
-# add_header_lib(miniaudio miniaudio)
-# add_header_lib(utf8.h utf8.h)
-# add_header_lib(pdqsort pdqsort)
-# add_header_lib(spdlog spdlog/include/)
+add_header_lib(linalg linalg)
+add_header_lib(miniaudio miniaudio)
+add_header_lib(utf8.h utf8.h)
+add_header_lib(pdqsort pdqsort)
+add_header_lib(spdlog spdlog/include/)
