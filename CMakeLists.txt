@@ -50,7 +50,10 @@ function(add_header_lib NAME INCLUDE_PATH)
 endfunction()
 
 ExternalProject_Add(json SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/json ${COMMON_ARGS})
-ExternalProject_Add(kcp SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/kcp ${COMMON_ARGS})
+ExternalProject_Add(kcp SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/kcp ${COMMON_ARGS}
+    CMAKE_ARGS
+        -DBUILD_TESTING=OFF
+)
 ExternalProject_Add(replxx SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/replxx 
     ${COMMON_ARGS}
     CMAKE_ARGS
