@@ -97,13 +97,15 @@ jobs:
           fetch-depth: 1
           submodules: recursive
       - name: Build
+        continue-on-error: true
         run: bash scripts/${{matrix.script}}/build
-      # - name: Upload artifact
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: deps-${{matrix.script}}
-      #     path: install
-      #     if-no-files-found: error
+      - name: Upload artifact
+        continue-on-error: true
+        uses: actions/upload-artifact@v2
+        with:
+          name: deps-${{matrix.script}}
+          path: install
+          if-no-files-found: error
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
