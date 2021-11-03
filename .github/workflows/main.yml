@@ -6,85 +6,85 @@ on:
   workflow_dispatch:
 
 jobs:
-  linux:
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - script: ubuntu
-            os: ubuntu-latest
-          - script: ubuntu-valgrind
-            os: ubuntu-latest
-    runs-on: ${{matrix.os}}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
-          submodules: recursive
-      - name: Build
-        run: bash scripts/${{matrix.script}}/build
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: deps-${{matrix.script}}
-          path: install
-          if-no-files-found: error
-  windows:
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - script: windows
-            os: windows-latest
-            msystem: MINGW64
-            arch: x86_64
-    runs-on: ${{matrix.os}}
-    steps:
-      - name: Set git to use LF
-        run: |
-          git config --global core.autocrlf false
-          git config --global core.eol lf
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
-          submodules: recursive
-      - name: Set up MSYS2
-        uses: msys2/setup-msys2@v2
-        with:
-          msystem: ${{ matrix.msystem }}
-          release: false
-          path-type: inherit
-          install: >-
-            base-devel
-            mingw-w64-${{ matrix.arch }}-toolchain
-            mingw-w64-${{ matrix.arch }}-cmake
-            mingw-w64-${{ matrix.arch }}-ninja
-            mingw-w64-${{ matrix.arch }}-clang
-            mingw-w64-${{ matrix.arch }}-lld
-            git
-            wget
-      - name: Build
-        shell: msys2 {0}
-        run: |
-          mkdir build
-          cd build
-          cmake -G Ninja ..
-          ninja install
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: deps-${{matrix.script}}
-          path: install
-          if-no-files-found: error
+  # linux:
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       include:
+  #         - script: ubuntu
+  #           os: ubuntu-latest
+  #         - script: ubuntu-valgrind
+  #           os: ubuntu-latest
+  #   runs-on: ${{matrix.os}}
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #       with:
+  #         fetch-depth: 1
+  #         submodules: recursive
+  #     - name: Build
+  #       run: bash scripts/${{matrix.script}}/build
+  #     - name: Upload artifact
+  #       uses: actions/upload-artifact@v2
+  #       with:
+  #         name: deps-${{matrix.script}}
+  #         path: install
+  #         if-no-files-found: error
+  # windows:
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       include:
+  #         - script: windows
+  #           os: windows-latest
+  #           msystem: MINGW64
+  #           arch: x86_64
+  #   runs-on: ${{matrix.os}}
+  #   steps:
+  #     - name: Set git to use LF
+  #       run: |
+  #         git config --global core.autocrlf false
+  #         git config --global core.eol lf
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #       with:
+  #         fetch-depth: 1
+  #         submodules: recursive
+  #     - name: Set up MSYS2
+  #       uses: msys2/setup-msys2@v2
+  #       with:
+  #         msystem: ${{ matrix.msystem }}
+  #         release: false
+  #         path-type: inherit
+  #         install: >-
+  #           base-devel
+  #           mingw-w64-${{ matrix.arch }}-toolchain
+  #           mingw-w64-${{ matrix.arch }}-cmake
+  #           mingw-w64-${{ matrix.arch }}-ninja
+  #           mingw-w64-${{ matrix.arch }}-clang
+  #           mingw-w64-${{ matrix.arch }}-lld
+  #           git
+  #           wget
+  #     - name: Build
+  #       shell: msys2 {0}
+  #       run: |
+  #         mkdir build
+  #         cd build
+  #         cmake -G Ninja ..
+  #         ninja install
+  #     - name: Upload artifact
+  #       uses: actions/upload-artifact@v2
+  #       with:
+  #         name: deps-${{matrix.script}}
+  #         path: install
+  #         if-no-files-found: error
   macos:
     strategy:
       fail-fast: false
       matrix:
         include:
-          - script: macos
-            os: macos-latest
+          # - script: macos
+          #   os: macos-latest
           - script: ios
             os: macos-latest
           - script: ios-simulator

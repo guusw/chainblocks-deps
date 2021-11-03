@@ -69,11 +69,11 @@ endfunction()
 #         -DBGFX_BUILD_EXAMPLES=OFF
 # )
 
-ExternalProject_Add(snappy SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/snappy
-    ${COMMON_ARGS}
-    CMAKE_ARGS
-        -DSNAPPY_BUILD_TESTS=OFF
-)
+# ExternalProject_Add(snappy SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/snappy
+#     ${COMMON_ARGS}
+#     CMAKE_ARGS
+#         -DSNAPPY_BUILD_TESTS=OFF
+# )
 
 ExternalProject_Add(brotli SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/brotli
     PATCH_COMMAND git restore . && git apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/brotli.patch
@@ -83,79 +83,79 @@ ExternalProject_Add(brotli SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/brotli
         -DBROTLI_BUILD_TOOLS=OFF
 )
 
-ExternalProject_Add(Catch2 SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Catch2
-    ${COMMON_ARGS}
-    CMAKE_ARGS
-        -DCATCH_INSTALL_DOCS=OFF
-)
+# ExternalProject_Add(Catch2 SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Catch2
+#     ${COMMON_ARGS}
+#     CMAKE_ARGS
+#         -DCATCH_INSTALL_DOCS=OFF
+# )
 
-ExternalProject_Add(tinygltf SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tinygltf
-    ${COMMON_ARGS}
-    CMAKE_ARGS
-        -DTINYGLTF_BUILD_LOADER_EXAMPLE=OFF
-)
+# ExternalProject_Add(tinygltf SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tinygltf
+#     ${COMMON_ARGS}
+#     CMAKE_ARGS
+#         -DTINYGLTF_BUILD_LOADER_EXAMPLE=OFF
+# )
 
-ExternalProject_Add(cpp-taskflow SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cpp-taskflow
-    ${COMMON_ARGS}
-    CMAKE_ARGS
-        -DTF_BUILD_TESTS=OFF
-        -DTF_BUILD_EXAMPLES=OFF
-)
+# ExternalProject_Add(cpp-taskflow SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cpp-taskflow
+#     ${COMMON_ARGS}
+#     CMAKE_ARGS
+#         -DTF_BUILD_TESTS=OFF
+#         -DTF_BUILD_EXAMPLES=OFF
+# )
 
-ExternalProject_Add(kissfft SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/kissfft
-    ${COMMON_ARGS}
-    CMAKE_ARGS
-        -DCMAKE_INSTALL_INCLUDEDIR=${CMAKE_INSTALL_PREFIX}/include
-        -DCMAKE_INSTALL_LIBDIR=${CMAKE_INSTALL_PREFIX}/lib
-        -DKISSFFT_STATIC=ON
-        -DKISSFFT_TEST=OFF
-        -DKISSFFT_TOOLS=OFF
-)
+# ExternalProject_Add(kissfft SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/kissfft
+#     ${COMMON_ARGS}
+#     CMAKE_ARGS
+#         -DCMAKE_INSTALL_INCLUDEDIR=${CMAKE_INSTALL_PREFIX}/include
+#         -DCMAKE_INSTALL_LIBDIR=${CMAKE_INSTALL_PREFIX}/lib
+#         -DKISSFFT_STATIC=ON
+#         -DKISSFFT_TEST=OFF
+#         -DKISSFFT_TOOLS=OFF
+# )
 
 ########### Tested below
 
-ExternalProject_Add(json SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/json
-    ${COMMON_ARGS}
-    CMAKE_ARGS
-        -DJSON_BuildTests=OFF
-)
+# ExternalProject_Add(json SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/json
+#     ${COMMON_ARGS}
+#     CMAKE_ARGS
+#         -DJSON_BuildTests=OFF
+# )
 
-ExternalProject_Add(kcp SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/kcp
-    ${COMMON_ARGS}
-    CMAKE_ARGS
-        -DBUILD_TESTING=OFF
-)
+# ExternalProject_Add(kcp SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/kcp
+#     ${COMMON_ARGS}
+#     CMAKE_ARGS
+#         -DBUILD_TESTING=OFF
+# )
 
-ExternalProject_Add(replxx SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/replxx 
-    ${COMMON_ARGS}
-    CMAKE_ARGS
-        -DREPLXX_BUILD_EXAMPLES=OFF
-        -DREPLXX_BUILD_PACKAGE=OFF
-)
+# ExternalProject_Add(replxx SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/replxx 
+#     ${COMMON_ARGS}
+#     CMAKE_ARGS
+#         -DREPLXX_BUILD_EXAMPLES=OFF
+#         -DREPLXX_BUILD_PACKAGE=OFF
+# )
 
-ExternalProject_Add(magic_enum SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/magic_enum 
-    ${COMMON_ARGS}
-    CMAKE_ARGS
-        -DMAGIC_ENUM_OPT_BUILD_EXAMPLES=OFF
-        -DMAGIC_ENUM_OPT_BUILD_TESTS=OFF
-)
+# ExternalProject_Add(magic_enum SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/magic_enum 
+#     ${COMMON_ARGS}
+#     CMAKE_ARGS
+#         -DMAGIC_ENUM_OPT_BUILD_EXAMPLES=OFF
+#         -DMAGIC_ENUM_OPT_BUILD_TESTS=OFF
+# )
 
-ExternalProject_Add(nameof SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/nameof 
-    ${COMMON_ARGS}
-    CMAKE_ARGS
-        -DNAMEOF_OPT_BUILD_EXAMPLES=OFF
-        -DNAMEOF_OPT_BUILD_TESTS=OFF
-)
+# ExternalProject_Add(nameof SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/nameof 
+#     ${COMMON_ARGS}
+#     CMAKE_ARGS
+#         -DNAMEOF_OPT_BUILD_EXAMPLES=OFF
+#         -DNAMEOF_OPT_BUILD_TESTS=OFF
+# )
 
-ExternalProject_Add(pareto SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pareto
-    ${COMMON_ARGS}
-    CMAKE_ARGS
-        -DBUILD_PYTHON_BINDING=OFF
-        -DBUILD_TESTS=OFF
-        -DBUILD_EXAMPLES=OFF
-        -DBUILD_MATPLOT_TARGETS=OFF
-        -DBUILD_BENCHMARKS=OFF
-)
+# ExternalProject_Add(pareto SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pareto
+#     ${COMMON_ARGS}
+#     CMAKE_ARGS
+#         -DBUILD_PYTHON_BINDING=OFF
+#         -DBUILD_TESTS=OFF
+#         -DBUILD_EXAMPLES=OFF
+#         -DBUILD_MATPLOT_TARGETS=OFF
+#         -DBUILD_BENCHMARKS=OFF
+# )
 
 # ExternalProject_Add(wasm3 SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/wasm3
 #     PATCH_COMMAND git restore . && git apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/wasm3.patch
