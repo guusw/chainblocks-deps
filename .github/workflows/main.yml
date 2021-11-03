@@ -104,3 +104,9 @@ jobs:
           name: deps-${{matrix.script}}
           path: install
           if-no-files-found: error
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: deps-${{matrix.script}}-build
+          path: build
+          if-no-files-found: error
