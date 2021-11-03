@@ -8,7 +8,7 @@ index 4ff3401..e6e571a 100644
  
 -if(BROTLI_EMSCRIPTEN)
 +option(BROTLI_BUILD_SHARED_LIBS "" OFF)
-+if(BROTLI_BUILD_SHARED_LIBS)
++if(NOT BROTLI_BUILD_SHARED_LIBS)
    set(BROTLI_SHARED_LIBS "")
  else()
    set(BROTLI_SHARED_LIBS brotlicommon brotlidec brotlienc)
