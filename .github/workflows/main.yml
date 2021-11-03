@@ -6,6 +6,38 @@ on:
   workflow_dispatch:
 
 jobs:
+  emscripten:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - script: emscripten-st
+            os: ubuntu-latest
+            threads-enabled: OFF
+          - script: emscripten-mt
+            os: ubuntu-latest
+            threads-enabled: ON
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          submodules: recursive
+      - name: Checkout emsdk
+        uses: actions/checkout@v2
+        with:
+          repository: emscripten-core/emsdk
+          path: emsdk
+          fetch-depth: 1
+      - name: Build
+        run: bash scripts/${{matrix.script}}/build ${{matrix.threads-enabled}}
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: deps-${{matrix.script}}
+          path: install
+          if-no-files-found: error
   linux:
     strategy:
       fail-fast: false

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+ThreadsEnabled=$1
+
+sudo apt-get -y update
+sudo apt-get -y install build-essential git cmake wget ninja-build
+
+pushd emsdk
+./emsdk install 2.0.25
+./emsdk activate 2.0.25
+popd
+
+source emsdk/emsdk_env.sh
+mkdir build
+cd build
+cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DEMSCRIPTEN_PTHREADS=$ThreadsEnabled -DEMSCRIPTEN_IDBFS=1 -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake ..
+cmake --build . --target install
