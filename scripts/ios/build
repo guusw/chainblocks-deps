@@ -7,4 +7,4 @@ TOOLCHAIN=`pwd`/cmake/ios-cmake/ios.toolchain.cmake
 mkdir build
 cd build
 cmake -G Xcode -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN -DPLATFORM=OS64 ..
-cmake --build . --target install
+# cmake --build . --target install
