@@ -76,6 +76,7 @@ ExternalProject_Add(bgfx
         -DBIMG_DECODE_ENABLE=OFF
         -DBGFX_BUILD_EXAMPLES=OFF
         -DBGFX_BUILD_TOOLS=${BGFX_BUILD_TOOLS}
+        -DENABLE_ARC=OFF
 )
 
 ########### Tested below
