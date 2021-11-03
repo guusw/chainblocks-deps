@@ -158,13 +158,13 @@ ExternalProject_Add(pareto SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pareto
         -DBUILD_BENCHMARKS=OFF
 )
 
-# ExternalProject_Add(wasm3 SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/wasm3
-#     PATCH_COMMAND git restore . && git apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/wasm3.patch
-#     ${COMMON_ARGS}
-#     CMAKE_ARGS
-#         -DBUILD_NATIVE=OFF
-#         -DBUILD_WASM3=OFF
-# )
+ExternalProject_Add(wasm3 SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/wasm3
+    PATCH_COMMAND git restore . && git apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/wasm3.patch
+    ${COMMON_ARGS}
+    CMAKE_ARGS
+        -DBUILD_NATIVE=OFF
+        -DBUILD_WASM3=OFF
+)
 
 # if(WIN32 OR IOS)
 #     set(BOOST_CMAKE_ARGS -DCMAKE_ASM_COMPILER=as)
@@ -188,68 +188,68 @@ ExternalProject_Add(pareto SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pareto
 #         ${BOOST_CMAKE_ARGS}
 # )
 
-# ExternalProject_Add(xxHash 
-#     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/xxHash/cmake_unofficial
-#     ${COMMON_ARGS}
-#     CMAKE_ARGS
-#         -DBUILD_SHARED_LIBS=OFF
-#         -DXXHASH_BUILD_XXHSUM=OFF
-# )
+ExternalProject_Add(xxHash 
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/xxHash/cmake_unofficial
+    ${COMMON_ARGS}
+    CMAKE_ARGS
+        -DBUILD_SHARED_LIBS=OFF
+        -DXXHASH_BUILD_XXHSUM=OFF
+)
 
-# if(WIN32)
-#     set(CONFIGURE_TARGET x86_64-w64-windows-gnu)
-#     ExternalProject_Add(
-#         backtrace
-#         URL ${CMAKE_CURRENT_SOURCE_DIR}/libbacktrace
-#         CONFIGURE_COMMAND sh configure --prefix=${INSTALL_ROOT} --target=${CONFIGURE_TARGET}
-#         BUILD_COMMAND make
-#         INSTALL_COMMAND make install
-#         BUILD_IN_SOURCE 1
-#     )
-# endif()
+if(WIN32)
+    set(CONFIGURE_TARGET x86_64-w64-windows-gnu)
+    ExternalProject_Add(
+        backtrace
+        URL ${CMAKE_CURRENT_SOURCE_DIR}/libbacktrace
+        CONFIGURE_COMMAND sh configure --prefix=${INSTALL_ROOT} --target=${CONFIGURE_TARGET}
+        BUILD_COMMAND make
+        INSTALL_COMMAND make install
+        BUILD_IN_SOURCE 1
+    )
+endif()
 
-# add_library(stb INTERFACE)
-# target_include_directories(stb INTERFACE
-#     $<INSTALL_INTERFACE:include>
-# )
-# add_library(stb_vorbis STATIC stb/stb_vorbis.c)
-# target_include_directories(stb_vorbis PRIVATE stb)
-# install(DIRECTORY stb
-#     DESTINATION include
-#     FILES_MATCHING 
-#         PATTERN "*.h" PATTERN "*.hpp" PATTERN "*.hxx"
-#         PATTERN ".git" EXCLUDE
-#         PATTERN ".git*" EXCLUDE
-# )
-# install(TARGETS stb stb_vorbis EXPORT stbTargets)
-# install(EXPORT stbTargets
-#     FILE stbConfig.cmake
-#     DESTINATION lib/cmake/stb
-# )
+add_library(stb INTERFACE)
+target_include_directories(stb INTERFACE
+    $<INSTALL_INTERFACE:include>
+)
+add_library(stb_vorbis STATIC stb/stb_vorbis.c)
+target_include_directories(stb_vorbis PRIVATE stb)
+install(DIRECTORY stb
+    DESTINATION include
+    FILES_MATCHING 
+        PATTERN "*.h" PATTERN "*.hpp" PATTERN "*.hxx"
+        PATTERN ".git" EXCLUDE
+        PATTERN ".git*" EXCLUDE
+)
+install(TARGETS stb stb_vorbis EXPORT stbTargets)
+install(EXPORT stbTargets
+    FILE stbConfig.cmake
+    DESTINATION lib/cmake/stb
+)
 
-# install(DIRECTORY bgfx/examples/common/imgui
-#     DESTINATION include/bgfx/examples
-#     FILES_MATCHING 
-#         PATTERN "*.h" PATTERN "*.hpp" PATTERN "*.hxx"
-#         PATTERN ".git" EXCLUDE
-#         PATTERN ".git*" EXCLUDE
-# )
+install(DIRECTORY bgfx/examples/common/imgui
+    DESTINATION include/bgfx/examples
+    FILES_MATCHING 
+        PATTERN "*.h" PATTERN "*.hpp" PATTERN "*.hxx"
+        PATTERN ".git" EXCLUDE
+        PATTERN ".git*" EXCLUDE
+)
 
-# install(DIRECTORY bgfx/3rdparty/iconfontheaders
-#     DESTINATION include
-#     FILES_MATCHING 
-#         PATTERN "*.h" PATTERN "*.hpp" PATTERN "*.hxx"
-#         PATTERN ".git" EXCLUDE
-#         PATTERN ".git*" EXCLUDE
-# )
+install(DIRECTORY bgfx/3rdparty/iconfontheaders
+    DESTINATION include
+    FILES_MATCHING 
+        PATTERN "*.h" PATTERN "*.hpp" PATTERN "*.hxx"
+        PATTERN ".git" EXCLUDE
+        PATTERN ".git*" EXCLUDE
+)
 
-# install(DIRECTORY bgfx/3rdparty/dear-imgui
-#     DESTINATION include
-#     FILES_MATCHING 
-#         PATTERN "*.h" PATTERN "*.hpp" PATTERN "*.hxx"
-#         PATTERN ".git" EXCLUDE
-#         PATTERN ".git*" EXCLUDE
-# )
+install(DIRECTORY bgfx/3rdparty/dear-imgui
+    DESTINATION include
+    FILES_MATCHING 
+        PATTERN "*.h" PATTERN "*.hpp" PATTERN "*.hxx"
+        PATTERN ".git" EXCLUDE
+        PATTERN ".git*" EXCLUDE
+)
 
 add_header_lib(linalg linalg)
 add_header_lib(miniaudio miniaudio)
