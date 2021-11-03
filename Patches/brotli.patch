@@ -1,8 +1,27 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4ff3401..14179fc 100644
+index 4ff3401..f245c7a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -215,16 +215,21 @@ if(BROTLI_PARENT_DIRECTORY)
+@@ -160,7 +160,8 @@ endfunction()
+ transform_sources_list("scripts/sources.lst" "${CMAKE_CURRENT_BINARY_DIR}/sources.lst.cmake")
+ include("${CMAKE_CURRENT_BINARY_DIR}/sources.lst.cmake")
+ 
+-if(BROTLI_EMSCRIPTEN)
++option(BROTLI_BUILD_SHARED_LIBS "" OFF)
++if(BROTLI_EMSCRIPTEN OR NOT BROTLI_BUILD_SHARED_LIBS)
+   set(BROTLI_SHARED_LIBS "")
+ else()
+   set(BROTLI_SHARED_LIBS brotlicommon brotlidec brotlienc)
+@@ -195,7 +196,7 @@ foreach(lib IN LISTS BROTLI_SHARED_LIBS BROTLI_STATIC_LIBS)
+   set_property(TARGET ${lib} APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${BROTLI_INCLUDE_DIRS}")
+ endforeach()
+ 
+-if(NOT BROTLI_EMSCRIPTEN)
++if(NOT BROTLI_EMSCRIPTEN AND BROTLI_BUILD_SHARED_LIBS)
+ target_link_libraries(brotlidec brotlicommon)
+ target_link_libraries(brotlienc brotlicommon)
+ endif()
+@@ -215,23 +216,30 @@ if(BROTLI_PARENT_DIRECTORY)
  endif()
  
  # Build the brotli executable
@@ -24,5 +43,14 @@ index 4ff3401..14179fc 100644
    )
 +  endif()
  
++  if(BROTLI_BUILD_SHARED_LIBS)
    install(
      TARGETS ${BROTLI_LIBRARIES_CORE}
+     ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+     RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+   )
++  endif()
+ 
+   install(
+     TARGETS ${BROTLI_LIBRARIES_CORE_STATIC}
