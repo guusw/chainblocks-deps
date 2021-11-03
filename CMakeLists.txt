@@ -69,20 +69,20 @@ endfunction()
 #         -DBGFX_BUILD_EXAMPLES=OFF
 # )
 
-# ExternalProject_Add(snappy SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/snappy
-#     ${COMMON_ARGS}
-#     CMAKE_ARGS
-#         -DSNAPPY_BUILD_TESTS=OFF
-# )
-
-ExternalProject_Add(brotli SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/brotli
-    PATCH_COMMAND git restore . && git apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/brotli.patch
+ExternalProject_Add(snappy SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/snappy
     ${COMMON_ARGS}
     CMAKE_ARGS
-        -DBROTLI_DISABLE_TESTS=ON
-        -DBROTLI_BUILD_TOOLS=OFF
-        -DENABLE_STRICT_TRY_COMPILE=ON
+        -DSNAPPY_BUILD_TESTS=OFF
 )
+
+# ExternalProject_Add(brotli SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/brotli
+#     PATCH_COMMAND git restore . && git apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/brotli.patch
+#     ${COMMON_ARGS}
+#     CMAKE_ARGS
+#         -DBROTLI_DISABLE_TESTS=ON
+#         -DBROTLI_BUILD_TOOLS=OFF
+#         -DENABLE_STRICT_TRY_COMPILE=ON
+# )
 
 # ExternalProject_Add(Catch2 SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Catch2
 #     ${COMMON_ARGS}
