@@ -69,179 +69,185 @@ endfunction()
 #         -DBGFX_BUILD_EXAMPLES=OFF
 # )
 
-ExternalProject_Add(snappy SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/snappy
-    ${COMMON_ARGS}
-    CMAKE_ARGS
-        -DSNAPPY_BUILD_TESTS=OFF
-)
+if(WIN32 OR IOS)
+    set(BOOST_CMAKE_ARGS -DCMAKE_ASM_COMPILER=as)
+endif()
 
-ExternalProject_Add(brotli SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/brotli
-    PATCH_COMMAND git restore . && git apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/brotli.patch
-    ${COMMON_ARGS}
-    CMAKE_ARGS
-        -DBROTLI_DISABLE_TESTS=ON
-        -DBROTLI_BUILD_TOOLS=OFF
-        -DENABLE_STRICT_TRY_COMPILE=ON
-)
+if(IOS)
+    set(BOOST_CMAKE_ARGS ${BOOST_CMAKE_ARGS} -DBOOST_CONTEXT_ARCHITECTURE=${ARCHS})
+    if(NOT X86_IOS_SIMULATOR)
+        set(BOOST_CMAKE_ARGS ${BOOST_CMAKE_ARGS} -DBOOST_CONTEXT_ABI=aapcs)
+    endif()
+endif()
 
-ExternalProject_Add(Catch2 SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Catch2
-    ${COMMON_ARGS}
-    CMAKE_ARGS
-        -DCATCH_INSTALL_DOCS=OFF
-)
+set(BOOST_MODULES filesystem stacktrace atomic)
+if(NOT EMSCRIPTEN)
+  set(BOOST_MODULES ${BOOST_MODULES} context)
+endif()
+list(JOIN BOOST_MODULES "|" BOOST_MODULES_JOINED)
 
-ExternalProject_Add(tinygltf SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tinygltf
+ExternalProject_Add(boost
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/boost
+    PATCH_COMMAND cd libs/context && git restore . && git apply --verbose --reject --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/boost-context.patch
+    LIST_SEPARATOR |
     ${COMMON_ARGS}
     CMAKE_ARGS
-        -DTINYGLTF_BUILD_LOADER_EXAMPLE=OFF
-)
-
-ExternalProject_Add(cpp-taskflow SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cpp-taskflow
-    ${COMMON_ARGS}
-    CMAKE_ARGS
-        -DTF_BUILD_TESTS=OFF
-        -DTF_BUILD_EXAMPLES=OFF
-)
-
-ExternalProject_Add(kissfft SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/kissfft
-    ${COMMON_ARGS}
-    CMAKE_ARGS
-        -DCMAKE_INSTALL_INCLUDEDIR=${CMAKE_INSTALL_PREFIX}/include
-        -DCMAKE_INSTALL_LIBDIR=${CMAKE_INSTALL_PREFIX}/lib
-        -DKISSFFT_STATIC=ON
-        -DKISSFFT_TEST=OFF
-        -DKISSFFT_TOOLS=OFF
+        -DBOOST_INCLUDE_LIBRARIES=${BOOST_MODULES_JOINED}
+        -DBOOST_USE_VALGRIND=${VALGRIND}
+        ${BOOST_CMAKE_ARGS}
 )
 
 ########### Tested below
 
-ExternalProject_Add(json SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/json
-    ${COMMON_ARGS}
-    CMAKE_ARGS
-        -DJSON_BuildTests=OFF
-)
-
-ExternalProject_Add(kcp SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/kcp
-    ${COMMON_ARGS}
-    CMAKE_ARGS
-        -DBUILD_TESTING=OFF
-)
-
-ExternalProject_Add(replxx SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/replxx 
-    ${COMMON_ARGS}
-    CMAKE_ARGS
-        -DREPLXX_BUILD_EXAMPLES=OFF
-        -DREPLXX_BUILD_PACKAGE=OFF
-)
-
-ExternalProject_Add(magic_enum SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/magic_enum 
-    ${COMMON_ARGS}
-    CMAKE_ARGS
-        -DMAGIC_ENUM_OPT_BUILD_EXAMPLES=OFF
-        -DMAGIC_ENUM_OPT_BUILD_TESTS=OFF
-)
-
-ExternalProject_Add(nameof SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/nameof 
-    ${COMMON_ARGS}
-    CMAKE_ARGS
-        -DNAMEOF_OPT_BUILD_EXAMPLES=OFF
-        -DNAMEOF_OPT_BUILD_TESTS=OFF
-)
-
-ExternalProject_Add(pareto SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pareto
-    ${COMMON_ARGS}
-    CMAKE_ARGS
-        -DBUILD_PYTHON_BINDING=OFF
-        -DBUILD_TESTS=OFF
-        -DBUILD_EXAMPLES=OFF
-        -DBUILD_MATPLOT_TARGETS=OFF
-        -DBUILD_BENCHMARKS=OFF
-)
-
-ExternalProject_Add(wasm3 SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/wasm3
-    PATCH_COMMAND git restore . && git apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/wasm3.patch
-    ${COMMON_ARGS}
-    CMAKE_ARGS
-        -DBUILD_NATIVE=OFF
-        -DBUILD_WASM3=OFF
-)
-
-# if(WIN32 OR IOS)
-#     set(BOOST_CMAKE_ARGS -DCMAKE_ASM_COMPILER=as)
-# endif()
-
-# if(IOS)
-#     set(BOOST_CMAKE_ARGS ${BOOST_CMAKE_ARGS} -DBOOST_CONTEXT_ARCHITECTURE=${ARCHS})
-#     if(NOT X86_IOS_SIMULATOR)
-#         set(BOOST_CMAKE_ARGS ${BOOST_CMAKE_ARGS} -DBOOST_CONTEXT_ABI=aapcs)
-#     endif()
-# endif()
-
-# ExternalProject_Add(boost
-#     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/boost
-#     PATCH_COMMAND cd libs/context && git restore . && git apply --verbose --reject --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/boost-context.patch
-#     LIST_SEPARATOR |
+# ExternalProject_Add(snappy SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/snappy
 #     ${COMMON_ARGS}
 #     CMAKE_ARGS
-#         -DBOOST_INCLUDE_LIBRARIES=context|filesystem|stacktrace|atomic
-#         -DBOOST_USE_VALGRIND=${VALGRIND}
-#         ${BOOST_CMAKE_ARGS}
+#         -DSNAPPY_BUILD_TESTS=OFF
 # )
 
-ExternalProject_Add(xxHash 
-    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/xxHash/cmake_unofficial
-    ${COMMON_ARGS}
-    CMAKE_ARGS
-        -DBUILD_SHARED_LIBS=OFF
-        -DXXHASH_BUILD_XXHSUM=OFF
-)
+# ExternalProject_Add(brotli SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/brotli
+#     PATCH_COMMAND git restore . && git apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/brotli.patch
+#     ${COMMON_ARGS}
+#     CMAKE_ARGS
+#         -DBROTLI_DISABLE_TESTS=ON
+#         -DBROTLI_BUILD_TOOLS=OFF
+#         -DENABLE_STRICT_TRY_COMPILE=ON
+# )
 
-if(WIN32)
-    set(CONFIGURE_TARGET x86_64-w64-windows-gnu)
-    ExternalProject_Add(
-        backtrace
-        URL ${CMAKE_CURRENT_SOURCE_DIR}/libbacktrace
-        CONFIGURE_COMMAND sh configure --prefix=${INSTALL_ROOT} --target=${CONFIGURE_TARGET}
-        BUILD_COMMAND make
-        INSTALL_COMMAND make install
-        BUILD_IN_SOURCE 1
-    )
-endif()
+# ExternalProject_Add(Catch2 SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Catch2
+#     ${COMMON_ARGS}
+#     CMAKE_ARGS
+#         -DCATCH_INSTALL_DOCS=OFF
+# )
 
-add_library(stb INTERFACE)
-target_include_directories(stb INTERFACE
-    $<INSTALL_INTERFACE:include>
-)
-add_library(stb_vorbis STATIC stb/stb_vorbis.c)
-target_include_directories(stb_vorbis PRIVATE stb)
-install(DIRECTORY stb
-    DESTINATION include
-    FILES_MATCHING 
-        PATTERN "*.h" PATTERN "*.hpp" PATTERN "*.hxx"
-        PATTERN ".git" EXCLUDE
-        PATTERN ".git*" EXCLUDE
-)
-install(TARGETS stb stb_vorbis EXPORT stbTargets)
-install(EXPORT stbTargets
-    FILE stbConfig.cmake
-    DESTINATION lib/cmake/stb
-)
+# ExternalProject_Add(tinygltf SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tinygltf
+#     ${COMMON_ARGS}
+#     CMAKE_ARGS
+#         -DTINYGLTF_BUILD_LOADER_EXAMPLE=OFF
+# )
 
-install(DIRECTORY bgfx/examples/common/imgui
-    DESTINATION include/bgfx/examples
-    FILES_MATCHING 
-        PATTERN "*.h" PATTERN "*.hpp" PATTERN "*.hxx"
-        PATTERN ".git" EXCLUDE
-        PATTERN ".git*" EXCLUDE
-)
+# ExternalProject_Add(cpp-taskflow SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cpp-taskflow
+#     ${COMMON_ARGS}
+#     CMAKE_ARGS
+#         -DTF_BUILD_TESTS=OFF
+#         -DTF_BUILD_EXAMPLES=OFF
+# )
 
-install(DIRECTORY bgfx/3rdparty/iconfontheaders
-    DESTINATION include
-    FILES_MATCHING 
-        PATTERN "*.h" PATTERN "*.hpp" PATTERN "*.hxx"
-        PATTERN ".git" EXCLUDE
-        PATTERN ".git*" EXCLUDE
-)
+# ExternalProject_Add(kissfft SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/kissfft
+#     ${COMMON_ARGS}
+#     CMAKE_ARGS
+#         -DCMAKE_INSTALL_INCLUDEDIR=${CMAKE_INSTALL_PREFIX}/include
+#         -DCMAKE_INSTALL_LIBDIR=${CMAKE_INSTALL_PREFIX}/lib
+#         -DKISSFFT_STATIC=ON
+#         -DKISSFFT_TEST=OFF
+#         -DKISSFFT_TOOLS=OFF
+# )
+
+# ExternalProject_Add(json SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/json
+#     ${COMMON_ARGS}
+#     CMAKE_ARGS
+#         -DJSON_BuildTests=OFF
+# )
+
+# ExternalProject_Add(kcp SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/kcp
+#     ${COMMON_ARGS}
+#     CMAKE_ARGS
+#         -DBUILD_TESTING=OFF
+# )
+
+# ExternalProject_Add(replxx SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/replxx 
+#     ${COMMON_ARGS}
+#     CMAKE_ARGS
+#         -DREPLXX_BUILD_EXAMPLES=OFF
+#         -DREPLXX_BUILD_PACKAGE=OFF
+# )
+
+# ExternalProject_Add(magic_enum SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/magic_enum 
+#     ${COMMON_ARGS}
+#     CMAKE_ARGS
+#         -DMAGIC_ENUM_OPT_BUILD_EXAMPLES=OFF
+#         -DMAGIC_ENUM_OPT_BUILD_TESTS=OFF
+# )
+
+# ExternalProject_Add(nameof SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/nameof 
+#     ${COMMON_ARGS}
+#     CMAKE_ARGS
+#         -DNAMEOF_OPT_BUILD_EXAMPLES=OFF
+#         -DNAMEOF_OPT_BUILD_TESTS=OFF
+# )
+
+# ExternalProject_Add(pareto SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pareto
+#     ${COMMON_ARGS}
+#     CMAKE_ARGS
+#         -DBUILD_PYTHON_BINDING=OFF
+#         -DBUILD_TESTS=OFF
+#         -DBUILD_EXAMPLES=OFF
+#         -DBUILD_MATPLOT_TARGETS=OFF
+#         -DBUILD_BENCHMARKS=OFF
+# )
+
+# ExternalProject_Add(wasm3 SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/wasm3
+#     PATCH_COMMAND git restore . && git apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/wasm3.patch
+#     ${COMMON_ARGS}
+#     CMAKE_ARGS
+#         -DBUILD_NATIVE=OFF
+#         -DBUILD_WASM3=OFF
+# )
+
+# ExternalProject_Add(xxHash 
+#     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/xxHash/cmake_unofficial
+#     ${COMMON_ARGS}
+#     CMAKE_ARGS
+#         -DBUILD_SHARED_LIBS=OFF
+#         -DXXHASH_BUILD_XXHSUM=OFF
+# )
+
+# if(WIN32)
+#     set(CONFIGURE_TARGET x86_64-w64-windows-gnu)
+#     ExternalProject_Add(
+#         backtrace
+#         URL ${CMAKE_CURRENT_SOURCE_DIR}/libbacktrace
+#         CONFIGURE_COMMAND sh configure --prefix=${INSTALL_ROOT} --target=${CONFIGURE_TARGET}
+#         BUILD_COMMAND make
+#         INSTALL_COMMAND make install
+#         BUILD_IN_SOURCE 1
+#     )
+# endif()
+
+# add_library(stb INTERFACE)
+# target_include_directories(stb INTERFACE
+#     $<INSTALL_INTERFACE:include>
+# )
+# add_library(stb_vorbis STATIC stb/stb_vorbis.c)
+# target_include_directories(stb_vorbis PRIVATE stb)
+# install(DIRECTORY stb
+#     DESTINATION include
+#     FILES_MATCHING 
+#         PATTERN "*.h" PATTERN "*.hpp" PATTERN "*.hxx"
+#         PATTERN ".git" EXCLUDE
+#         PATTERN ".git*" EXCLUDE
+# )
+# install(TARGETS stb stb_vorbis EXPORT stbTargets)
+# install(EXPORT stbTargets
+#     FILE stbConfig.cmake
+#     DESTINATION lib/cmake/stb
+# )
+
+# install(DIRECTORY bgfx/examples/common/imgui
+#     DESTINATION include/bgfx/examples
+#     FILES_MATCHING 
+#         PATTERN "*.h" PATTERN "*.hpp" PATTERN "*.hxx"
+#         PATTERN ".git" EXCLUDE
+#         PATTERN ".git*" EXCLUDE
+# )
+
+# install(DIRECTORY bgfx/3rdparty/iconfontheaders
+#     DESTINATION include
+#     FILES_MATCHING 
+#         PATTERN "*.h" PATTERN "*.hpp" PATTERN "*.hxx"
+#         PATTERN ".git" EXCLUDE
+#         PATTERN ".git*" EXCLUDE
+# )
 
 install(DIRECTORY bgfx/3rdparty/dear-imgui
     DESTINATION include
