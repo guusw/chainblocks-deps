@@ -87,8 +87,8 @@ jobs:
           #   os: macos-latest
           - script: ios
             os: macos-latest
-          - script: ios-simulator
-            os: macos-latest
+          # - script: ios-simulator
+          #   os: macos-latest
     runs-on: ${{matrix.os}}
     steps:
       - name: Checkout
