@@ -49,55 +49,64 @@ function(add_header_lib NAME INCLUDE_PATH)
     )
 endfunction()
 
-# ExternalProject_Add(SDL SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/SDL
-#     ${COMMON_ARGS}
-#     CMAKE_ARGS 
-#         -DSDL_RENDER_DISABLED=ON
-# )
-
-# ExternalProject_Add(bgfx
-#     GIT_REPOSITORY https://github.com/bkaradzic/bgfx.cmake.git
-#     GIT_TAG b7b7cd7bdda84433490dca8a12cd931f79debeff
-#     GIT_SUBMODULES ""
-#     PATCH_COMMAND git restore . && git apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/bgfx.cmake.patch
-#     ${COMMON_ARGS}
-#     CMAKE_ARGS 
-#         -DBX_DIR=${CMAKE_CURRENT_SOURCE_DIR}/bx
-#         -DBIMG_DIR=${CMAKE_CURRENT_SOURCE_DIR}/bimg
-#         -DBGFX_DIR=${CMAKE_CURRENT_SOURCE_DIR}/bgfx
-#         -DBIMG_DECODE_ENABLE=OFF
-#         -DBGFX_BUILD_EXAMPLES=OFF
-# )
-
-if(WIN32 OR IOS)
-    set(BOOST_CMAKE_ARGS -DCMAKE_ASM_COMPILER=as)
-endif()
-
-if(IOS)
-    set(BOOST_CMAKE_ARGS ${BOOST_CMAKE_ARGS} -DBOOST_CONTEXT_ARCHITECTURE=${ARCHS})
-    if(NOT X86_IOS_SIMULATOR)
-        set(BOOST_CMAKE_ARGS ${BOOST_CMAKE_ARGS} -DBOOST_CONTEXT_ABI=aapcs)
-    endif()
-endif()
-
-set(BOOST_MODULES atomic container lockfree align algorithm)
 if(NOT EMSCRIPTEN)
-  set(BOOST_MODULES ${BOOST_MODULES} context filesystem process stacktrace asio beast multiprecision)
+  ExternalProject_Add(SDL SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/SDL
+      ${COMMON_ARGS}
+      CMAKE_ARGS 
+          -DSDL_RENDER_DISABLED=ON
+  )
 endif()
-list(JOIN BOOST_MODULES "|" BOOST_MODULES_JOINED)
 
-ExternalProject_Add(boost
-    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/boost
-    PATCH_COMMAND cd libs/context && git restore . && git apply --verbose --reject --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/boost-context.patch
-    LIST_SEPARATOR |
+if(EMSCRIPTEN OR IOS)
+  set(BGFX_BUILD_TOOLS OFF)
+else()
+  set(BGFX_BUILD_TOOLS ON)
+endif()
+
+ExternalProject_Add(bgfx
+    GIT_REPOSITORY https://github.com/bkaradzic/bgfx.cmake.git
+    GIT_TAG b7b7cd7bdda84433490dca8a12cd931f79debeff
+    GIT_SUBMODULES ""
+    PATCH_COMMAND git restore . && git apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/bgfx.cmake.patch
     ${COMMON_ARGS}
-    CMAKE_ARGS
-        -DBOOST_INCLUDE_LIBRARIES=${BOOST_MODULES_JOINED}
-        -DBOOST_USE_VALGRIND=${VALGRIND}
-        ${BOOST_CMAKE_ARGS}
+    CMAKE_ARGS 
+        -DBX_DIR=${CMAKE_CURRENT_SOURCE_DIR}/bx
+        -DBIMG_DIR=${CMAKE_CURRENT_SOURCE_DIR}/bimg
+        -DBGFX_DIR=${CMAKE_CURRENT_SOURCE_DIR}/bgfx
+        -DBIMG_DECODE_ENABLE=OFF
+        -DBGFX_BUILD_EXAMPLES=OFF
+        -DBGFX_BUILD_TOOLS=${BGFX_BUILD_TOOLS}
 )
 
 ########### Tested below
+
+# if(WIN32 OR IOS)
+#     set(BOOST_CMAKE_ARGS -DCMAKE_ASM_COMPILER=as)
+# endif()
+
+# if(IOS)
+#     set(BOOST_CMAKE_ARGS ${BOOST_CMAKE_ARGS} -DBOOST_CONTEXT_ARCHITECTURE=${ARCHS})
+#     if(NOT X86_IOS_SIMULATOR)
+#         set(BOOST_CMAKE_ARGS ${BOOST_CMAKE_ARGS} -DBOOST_CONTEXT_ABI=aapcs)
+#     endif()
+# endif()
+
+# set(BOOST_MODULES atomic container lockfree align algorithm)
+# if(NOT EMSCRIPTEN)
+#   set(BOOST_MODULES ${BOOST_MODULES} context filesystem process stacktrace asio beast multiprecision)
+# endif()
+# list(JOIN BOOST_MODULES "|" BOOST_MODULES_JOINED)
+
+# ExternalProject_Add(boost
+#     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/boost
+#     PATCH_COMMAND cd libs/context && git restore . && git apply --verbose --reject --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/boost-context.patch
+#     LIST_SEPARATOR |
+#     ${COMMON_ARGS}
+#     CMAKE_ARGS
+#         -DBOOST_INCLUDE_LIBRARIES=${BOOST_MODULES_JOINED}
+#         -DBOOST_USE_VALGRIND=${VALGRIND}
+#         ${BOOST_CMAKE_ARGS}
+# )
 
 # ExternalProject_Add(snappy SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/snappy
 #     ${COMMON_ARGS}
