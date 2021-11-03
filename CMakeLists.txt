@@ -80,9 +80,9 @@ if(IOS)
     endif()
 endif()
 
-set(BOOST_MODULES filesystem stacktrace atomic)
+set(BOOST_MODULES atomic container lockfree align algorithm)
 if(NOT EMSCRIPTEN)
-  set(BOOST_MODULES ${BOOST_MODULES} context)
+  set(BOOST_MODULES ${BOOST_MODULES} context filesystem process stacktrace asio beast multiprecision)
 endif()
 list(JOIN BOOST_MODULES "|" BOOST_MODULES_JOINED)
 
