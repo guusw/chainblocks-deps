@@ -12,10 +12,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - script: emscripten-st
+          - script: emscripten
+            thread-suffix: st
             os: ubuntu-latest
             threads-enabled: OFF
-          - script: emscripten-mt
+          - script: emscripten
+            thread-suffix: mt
             os: ubuntu-latest
             threads-enabled: ON
     steps:
@@ -35,7 +37,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: deps-${{matrix.script}}
+          name: deps-${{matrix.script}}-${{matrix.thread-suffix}}
           path: install
           if-no-files-found: error
   linux:
