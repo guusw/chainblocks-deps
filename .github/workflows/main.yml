@@ -157,6 +157,7 @@ jobs:
     steps:
       - uses: ncipollo/release-action@v1
         with:
+          allowUpdates: true
           artifacts: "*.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: auto-deps
