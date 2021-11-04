@@ -85,3 +85,6 @@
 [submodule "boost"]
 	path = boost
 	url = git@github.com:boostorg/boost.git
+[submodule "cmake/chainblocks-cmake-shared"]
+	path = cmake/chainblocks-cmake-shared
+	url = https://github.com/guusw/chainblocks-cmake-shared.git
