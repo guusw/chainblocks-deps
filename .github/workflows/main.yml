@@ -37,7 +37,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: deps-${{matrix.script}}-${{matrix.thread-suffix}}
+          name: deps-${{env.ARTIFACT_NAME}}
           path: install
           if-no-files-found: error
   linux:
@@ -61,7 +61,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: deps-${{matrix.script}}
+          name: deps-${{env.ARTIFACT_NAME}}
           path: install
           if-no-files-found: error
   windows:
@@ -109,7 +109,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: deps-${{matrix.script}}
+          name: deps-${{env.ARTIFACT_NAME}}
           path: install
           if-no-files-found: error
   macos:
@@ -141,6 +141,6 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: deps-${{matrix.script}}
+          name: deps-${{env.ARTIFACT_NAME}}
           path: install
           if-no-files-found: error
