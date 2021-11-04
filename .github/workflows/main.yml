@@ -130,6 +130,12 @@ jobs:
         with:
           fetch-depth: 1
           submodules: recursive
+      - name: Checkout ios-cmake
+        uses: actions/checkout@v2
+        with:
+          repository: leetal/ios-cmake
+          path: cmake/ios-cmake
+          fetch-depth: 1
       - name: Build
         run: bash scripts/${{matrix.script}}/build
       - name: Upload artifact
