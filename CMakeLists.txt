@@ -12,9 +12,9 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 # Expose artifact name to github actions
-if($ENV{GITHUB_ENV})
+if(DEFINED ENV{GITHUB_WORKFLOW})
     set(SET_CMD "ARTIFACT_NAME=${TARGET_ID}")
-    file(APPEND "$ENV{GITHUB_ENV}" "${SET_CMD}")
+    file(APPEND $ENV{GITHUB_ENV} "${SET_CMD}")
     message("Setting ${SET_CMD} for github actions")
 endif()
 
