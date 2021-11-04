@@ -144,3 +144,19 @@ jobs:
           name: deps-${{env.ARTIFACT_NAME}}
           path: install
           if-no-files-found: error
+  release:
+    runs-on: ubuntu-latest
+    needs: [
+      emscripten,
+      linux,
+      windows,
+      macos
+    ]
+    steps:
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: "*.zip"
+          bodyFile: "body.md"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: auto-deps
+          commit: main
