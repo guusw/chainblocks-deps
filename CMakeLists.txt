@@ -5,11 +5,17 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cha
 include(Platform)
 include(ExternalProject)
 
-set(BUILD_ID "${TARGET_ID}" CACHE STRING "The identifier for the build")
-set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/install/${BUILD_ID})
+set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/install/${TARGET_ID})
 
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
+endif()
+
+# Expose artifact name to github actions
+if($ENV{GITHUB_ENV})
+    set(SET_CMD "ARTIFACT_NAME=${TARGET_ID}")
+    file(APPEND "$ENV{GITHUB_ENV}" "${SET_CMD}")
+    message("Setting ${SET_CMD} for github actions")
 endif()
 
 set(COMMON_CMAKE_ARGS 
