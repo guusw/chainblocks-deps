@@ -6,64 +6,64 @@ on:
   workflow_dispatch:
 
 jobs:
-  # emscripten:
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       include:
-  #         - script: emscripten
-  #           thread-suffix: st
-  #           os: ubuntu-latest
-  #           threads-enabled: OFF
-  #         - script: emscripten
-  #           thread-suffix: mt
-  #           os: ubuntu-latest
-  #           threads-enabled: ON
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
-  #       with:
-  #         fetch-depth: 1
-  #         submodules: recursive
-  #     - name: Checkout emsdk
-  #       uses: actions/checkout@v2
-  #       with:
-  #         repository: emscripten-core/emsdk
-  #         path: emsdk
-  #         fetch-depth: 1
-  #     - name: Build
-  #       run: bash scripts/${{matrix.script}}/build ${{matrix.threads-enabled}}
-  #     - name: Make Release
-  #       uses: ./.github/actions/create-deps-release
-  #       with:
-  #         path: build/install
-  #         name: deps-${{env.ARTIFACT_NAME}}
-  #         token: ${{secrets.GITHUB_TOKEN}}
-  # linux:
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       include:
-  #         - script: ubuntu
-  #           os: ubuntu-latest
-  #         - script: ubuntu-valgrind
-  #           os: ubuntu-latest
-  #   runs-on: ${{matrix.os}}
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
-  #       with:
-  #         fetch-depth: 1
-  #         submodules: recursive
-  #     - name: Build
-  #       run: bash scripts/${{matrix.script}}/build
-  #     - name: Make Release
-  #       uses: ./.github/actions/create-deps-release
-  #       with:
-  #         path: build/install
-  #         name: deps-${{env.ARTIFACT_NAME}}
-  #         token: ${{secrets.GITHUB_TOKEN}}
+  emscripten:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - script: emscripten
+            thread-suffix: st
+            os: ubuntu-latest
+            threads-enabled: OFF
+          - script: emscripten
+            thread-suffix: mt
+            os: ubuntu-latest
+            threads-enabled: ON
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          submodules: recursive
+      - name: Checkout emsdk
+        uses: actions/checkout@v2
+        with:
+          repository: emscripten-core/emsdk
+          path: emsdk
+          fetch-depth: 1
+      - name: Build
+        run: bash scripts/${{matrix.script}}/build ${{matrix.threads-enabled}}
+      - name: Make Release
+        uses: ./.github/actions/create-deps-release
+        with:
+          path: build/install
+          name: ${{env.ARTIFACT_NAME}}
+          token: ${{secrets.GITHUB_TOKEN}}
+  linux:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - script: ubuntu
+            os: ubuntu-latest
+          - script: ubuntu-valgrind
+            os: ubuntu-latest
+    runs-on: ${{matrix.os}}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          submodules: recursive
+      - name: Build
+        run: bash scripts/${{matrix.script}}/build
+      - name: Make Release
+        uses: ./.github/actions/create-deps-release
+        with:
+          path: build/install
+          name: ${{env.ARTIFACT_NAME}}
+          token: ${{secrets.GITHUB_TOKEN}}
   windows:
     strategy:
       fail-fast: false
@@ -110,37 +110,37 @@ jobs:
         uses: ./.github/actions/create-deps-release
         with:
           path: build/install
-          name: deps-${{env.ARTIFACT_NAME}}
+          name: ${{env.ARTIFACT_NAME}}
           token: ${{secrets.GITHUB_TOKEN}}
-  # macos:
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       include:
-  #         - script: macos
-  #           os: macos-latest
-  #         - script: ios
-  #           os: macos-latest
-  #         - script: ios-simulator
-  #           os: macos-latest
-  #   runs-on: ${{matrix.os}}
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
-  #       with:
-  #         fetch-depth: 1
-  #         submodules: recursive
-  #     - name: Checkout ios-cmake
-  #       uses: actions/checkout@v2
-  #       with:
-  #         repository: leetal/ios-cmake
-  #         path: cmake/ios-cmake
-  #         fetch-depth: 1
-  #     - name: Build
-  #       run: bash scripts/${{matrix.script}}/build
-  #     - name: Make Release
-  #       uses: ./.github/actions/create-deps-release
-  #       with:
-  #         path: build/install
-  #         name: deps-${{env.ARTIFACT_NAME}}
-  #         token: ${{secrets.GITHUB_TOKEN}}
+  macos:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - script: macos
+            os: macos-latest
+          - script: ios
+            os: macos-latest
+          - script: ios-simulator
+            os: macos-latest
+    runs-on: ${{matrix.os}}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          submodules: recursive
+      - name: Checkout ios-cmake
+        uses: actions/checkout@v2
+        with:
+          repository: leetal/ios-cmake
+          path: cmake/ios-cmake
+          fetch-depth: 1
+      - name: Build
+        run: bash scripts/${{matrix.script}}/build
+      - name: Make Release
+        uses: ./.github/actions/create-deps-release
+        with:
+          path: build/install
+          name: ${{env.ARTIFACT_NAME}}
+          token: ${{secrets.GITHUB_TOKEN}}
