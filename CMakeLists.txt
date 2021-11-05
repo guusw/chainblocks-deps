@@ -147,7 +147,6 @@ ExternalProject_Add(cpp-taskflow SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cpp-task
     PATCH_COMMAND git restore . && git apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/cpp-taskflow.patch
     ${COMMON_ARGS}
     CMAKE_ARGS
-        -DCMAKE_INSTALL_PREFIX=""
         -DTF_BUILD_TESTS=OFF
         -DTF_BUILD_EXAMPLES=OFF
 )
