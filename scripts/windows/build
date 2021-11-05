@@ -1,0 +1,9 @@
+#!/bin/bash
+
+mkdir -p build/install
+cd build
+
+pacman -Q >install/msys2-package-list.txt
+
+cmake -G Ninja ..
+cmake --build . --target install

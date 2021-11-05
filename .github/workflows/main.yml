@@ -102,10 +102,7 @@ jobs:
       - name: Build
         shell: msys2 {0}
         run: |
-          mkdir build
-          cd build
-          cmake -G Ninja ..
-          ninja install
+          bash scripts/${{matrix.script}}/build
       - name: Make Release
         uses: ./.github/actions/create-deps-release
         with:
