@@ -1,0 +1,31 @@
+name: "Create dependencies release"
+description: ""
+inputs:
+  path:
+    description: "Path the the folder containing the files to archive and upload"
+    required: true
+    default: ""
+  name:
+    description: "base name for the archive and the release"
+    required: true
+  token:
+    description: "Github token, passed from secrets.GITHUB_TOKEN"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      run: |
+        rm -rf ${{inputs.name}}.tar.gz
+        tar --xform s:'./':: -czvf ${{inputs.name}}.tar.gz -C ${{inputs.path}} .
+    - uses: ncipollo/release-action@v1
+      with:
+        allowUpdates: true
+        artifacts: "${{inputs.name}}.tar.gz"
+        tag: auto-deps-${{inputs.name}}
+        commit: main
+        token: ${{inputs.token}}
+    - shell: bash
+      run: |
+        git tag -f auto-deps-${{inputs.name}}
+        git push --force origin auto-deps-${{inputs.name}}
