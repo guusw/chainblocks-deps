@@ -34,10 +34,10 @@ index 84019ac..9ac5639 100644
  				 LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
  				 ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
 diff --git a/cmake/3rdparty/dear-imgui.cmake b/cmake/3rdparty/dear-imgui.cmake
-index 99844b5..6d60c8a 100644
+index 99844b5..73e2541 100644
 --- a/cmake/3rdparty/dear-imgui.cmake
 +++ b/cmake/3rdparty/dear-imgui.cmake
-@@ -14,8 +14,8 @@ endif()
+@@ -14,8 +14,9 @@ endif()
  
  file( GLOB dear_IMGUI_SOURCES ${BGFX_DIR}/3rdparty/dear-imgui/*.cpp ${BGFX_DIR}/3rdparty/dear-imgui/*.h ${BGFX_DIR}/3rdparty/dear-imgui/*.inl )
  
@@ -46,5 +46,6 @@ index 99844b5..6d60c8a 100644
  target_compile_definitions( dear-imgui PRIVATE "-D_CRT_SECURE_NO_WARNINGS" "-D__STDC_FORMAT_MACROS" )
 -target_include_directories( dear-imgui PUBLIC ${BGFX_DIR}/3rdparty )
 +target_include_directories( dear-imgui PUBLIC $<BUILD_INTERFACE:${BGFX_DIR}/3rdparty> )
++target_include_directories( dear-imgui PUBLIC $<INSTALL_INTERFACE:${BGFX_DIR}/3rdparty/dear-imgui> )
  target_link_libraries( dear-imgui PUBLIC bx )
  set_target_properties( dear-imgui PROPERTIES FOLDER "bgfx/3rdparty" )

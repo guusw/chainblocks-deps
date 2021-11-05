@@ -17,7 +17,7 @@ runs:
     - shell: bash
       run: |
         rm -rf ${{inputs.name}}.tar.gz
-        tar --xform s:'./':: -czvf ${{inputs.name}}.tar.gz -C ${{inputs.path}} .
+        tar -czvf ${{inputs.name}}.tar.gz -C ${{inputs.path}} .
     - uses: ncipollo/release-action@v1
       with:
         allowUpdates: true
