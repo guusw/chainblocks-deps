@@ -56,17 +56,18 @@ function(add_header_lib NAME INCLUDE_PATH)
 endfunction()
 
 if(NOT EMSCRIPTEN)
-  ExternalProject_Add(SDL SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/SDL
-      ${COMMON_ARGS}
-      CMAKE_ARGS 
-          -DSDL_RENDER_DISABLED=ON
-  )
+    ExternalProject_Add(SDL SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/SDL
+        PATCH_COMMAND git restore . && git apply --whitespace=fix ${CMAKE_CURRENT_SOURCE_DIR}/Patches/SDL2.patch
+        ${COMMON_ARGS}
+        CMAKE_ARGS 
+            -DSDL_RENDER_DISABLED=ON
+    )
 endif()
 
 if(EMSCRIPTEN OR IOS)
-  set(BGFX_BUILD_TOOLS OFF)
+    set(BGFX_BUILD_TOOLS OFF)
 else()
-  set(BGFX_BUILD_TOOLS ON)
+    set(BGFX_BUILD_TOOLS ON)
 endif()
 
 ExternalProject_Add(bgfx
@@ -100,7 +101,7 @@ endif()
 
 set(BOOST_MODULES atomic container lockfree align algorithm)
 if(NOT EMSCRIPTEN)
-  set(BOOST_MODULES ${BOOST_MODULES} context filesystem process stacktrace asio beast multiprecision)
+    set(BOOST_MODULES ${BOOST_MODULES} context filesystem process stacktrace asio beast multiprecision)
 endif()
 list(JOIN BOOST_MODULES "|" BOOST_MODULES_JOINED)
 
