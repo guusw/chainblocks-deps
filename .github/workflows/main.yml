@@ -155,10 +155,18 @@ jobs:
       macos
     ]
     steps:
-      - uses: ncipollo/release-action@v1
-        with:
-          allowUpdates: true
-          artifacts: "*.zip"
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag: auto-deps
-          commit: main
+    - name: Download artifacts
+      uses: actions/download-artifact@v2
+      with:
+        path: artifacts
+    - name: Compress artifacts
+      run: |
+        cd artifacts
+        find . -maxdepth 1 ! -path . -type d -exec tar --strip-components 1 -czvf {}.tar.gz {} \;
+    - uses: ncipollo/release-action@v1
+      with:
+        allowUpdates: true
+        artifacts: "artifacts/*.tar.gz"
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag: auto-deps
+        commit: main
