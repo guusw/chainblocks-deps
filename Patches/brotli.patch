@@ -1,7 +1,30 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4ff3401..e6e571a 100644
+index 4ff3401..270e6de 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
+@@ -1,8 +1,4 @@
+-# Ubuntu 12.04 LTS has CMake 2.8.7, and is an important target since
+-# several CI services, such as Travis and Drone, use it.  Solaris 11
+-# has 2.8.6, and it's not difficult to support if you already have to
+-# support 2.8.7.
+-cmake_minimum_required(VERSION 2.8.6)
++cmake_minimum_required(VERSION 3.9.6)
+ 
+ project(brotli C)
+ 
+@@ -130,7 +126,11 @@ else()
+ endif()
+ unset(LOG2_RES)
+ 
+-set(BROTLI_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/c/include")
++set(BROTLI_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/c/include")
++set(BROTLI_INCLUDE_DIRS
++  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/c/include>"
++  "$<INSTALL_INTERFACE:include>"
++)
+ mark_as_advanced(BROTLI_INCLUDE_DIRS)
+ 
+ set(BROTLI_LIBRARIES_CORE brotlienc brotlidec brotlicommon)
 @@ -160,7 +160,8 @@ endfunction()
  transform_sources_list("scripts/sources.lst" "${CMAKE_CURRENT_BINARY_DIR}/sources.lst.cmake")
  include("${CMAKE_CURRENT_BINARY_DIR}/sources.lst.cmake")
@@ -21,7 +44,7 @@ index 4ff3401..e6e571a 100644
  target_link_libraries(brotlidec brotlicommon)
  target_link_libraries(brotlienc brotlicommon)
  endif()
-@@ -215,23 +216,29 @@ if(BROTLI_PARENT_DIRECTORY)
+@@ -215,37 +216,47 @@ if(BROTLI_PARENT_DIRECTORY)
  endif()
  
  # Build the brotli executable
@@ -38,14 +61,16 @@ index 4ff3401..e6e571a 100644
  if(NOT BROTLI_BUNDLED_MODE)
 +  if(BROTLI_BUILD_TOOLS)
    install(
-     TARGETS brotli
+-    TARGETS brotli
++    TARGETS brotli EXPORT brotliTargets
      RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
    )
 +  endif()
  
 +  if(BROTLI_BUILD_SHARED_LIBS)
    install(
-     TARGETS ${BROTLI_LIBRARIES_CORE}
+-    TARGETS ${BROTLI_LIBRARIES_CORE}
++    TARGETS ${BROTLI_LIBRARIES_CORE} EXPORT brotliTargets
      ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
      LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
      RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
@@ -53,10 +78,23 @@ index 4ff3401..e6e571a 100644
 +  endif()
  
    install(
-     TARGETS ${BROTLI_LIBRARIES_CORE_STATIC}
-@@ -245,7 +252,6 @@ if(NOT BROTLI_BUNDLED_MODE)
+-    TARGETS ${BROTLI_LIBRARIES_CORE_STATIC}
++    TARGETS ${BROTLI_LIBRARIES_CORE_STATIC} EXPORT brotliTargets
+     ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+     RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+   )
+ 
+   install(
+-    DIRECTORY ${BROTLI_INCLUDE_DIRS}/brotli
++    DIRECTORY ${BROTLI_INCLUDE_DIR}/brotli
      DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
    )
++
++  install(EXPORT brotliTargets
++    FILE brotliConfig.cmake
++    DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/brotli"
++  )
  endif()  # BROTLI_BUNDLED_MODE
 -endif()  # BROTLI_EMSCRIPTEN
  
