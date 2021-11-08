@@ -18,7 +18,7 @@ mkdir -p build/install
 cd build
 
 pushd $EMSDK_PATH/upstream
-git describe --all >$BUILD_PATH/emsdk-version.txt
+git describe --all >$BUILD_PATH/install/emsdk-version.txt
 popd
 
 apt list --installed >install/apt-package-list.txt
