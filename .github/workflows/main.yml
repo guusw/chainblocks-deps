@@ -71,6 +71,10 @@ jobs:
         include:
           - script: windows
             os: windows-latest
+            msystem: MINGW32
+            arch: i686
+          - script: windows
+            os: windows-latest
             msystem: MINGW64
             arch: x86_64
     runs-on: ${{matrix.os}}
