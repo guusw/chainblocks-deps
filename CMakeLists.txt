@@ -105,9 +105,13 @@ endif()
 
 set(BOOST_MODULES atomic container lockfree align algorithm asio)
 if(NOT EMSCRIPTEN)
-    set(BOOST_MODULES ${BOOST_MODULES} context filesystem process stacktrace beast multiprecision process)
+    list(APPEND BOOST_MODULES context filesystem stacktrace beast multiprecision process)
 endif()
 list(JOIN BOOST_MODULES "|" BOOST_MODULES_JOINED)
+
+if (EMSCRIPTEN)
+    list(APPEND BOOST_CMAKE_ARGS -DBOOST_CONTEXT_IMPLEMENTATION="noop")
+endif()
 
 ExternalProject_Add(boost
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/boost
