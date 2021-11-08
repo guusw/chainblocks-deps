@@ -23,5 +23,5 @@ popd
 
 apt list --installed >install/apt-package-list.txt
 
-cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DEMSCRIPTEN_PTHREADS=$ThreadsEnabled -DEMSCRIPTEN_IDBFS=1 -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake ..
+cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DEMSCRIPTEN_PTHREADS=$ThreadsEnabled -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake ..
 cmake --build . --target install
