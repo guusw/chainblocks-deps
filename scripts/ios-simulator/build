@@ -6,5 +6,6 @@ TOOLCHAIN=`pwd`/cmake/ios-cmake/ios.toolchain.cmake
 
 mkdir build
 cd build
+
 cmake -G Xcode -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN -DPLATFORM=SIMULATOR64 ..
 cmake --build . --target install
