@@ -26,6 +26,7 @@ set(COMMON_CMAKE_ARGS
 
 if(EMSCRIPTEN)
     list(APPEND COMMON_CMAKE_ARGS -DEMSCRIPTEN_PTHREADS=$EMSCRIPTEN_PTHREADS -DEMSCRIPTEN_IDBFS=1)
+endif()
 
 if(CMAKE_TOOLCHAIN_FILE)
     list(APPEND COMMON_CMAKE_ARGS -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE})
@@ -102,9 +103,9 @@ if(IOS)
     endif()
 endif()
 
-set(BOOST_MODULES atomic container lockfree align algorithm)
+set(BOOST_MODULES atomic container lockfree align algorithm asio)
 if(NOT EMSCRIPTEN)
-    set(BOOST_MODULES ${BOOST_MODULES} context filesystem process stacktrace asio beast multiprecision)
+    set(BOOST_MODULES ${BOOST_MODULES} context filesystem process stacktrace beast multiprecision process)
 endif()
 list(JOIN BOOST_MODULES "|" BOOST_MODULES_JOINED)
 
